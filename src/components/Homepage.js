@@ -11,8 +11,6 @@ import Container from '@material-ui/core/Container';
 import Icon from '@material-ui/core/Icon';
 
 
-
-
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,

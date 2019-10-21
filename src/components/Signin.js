@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -49,17 +49,26 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignIn() {
+const SignIn = (props)  => {
   const classes = useStyles();
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState(null);
+  const { history } = props;
+
+  const checkCredentials = () => {
+    if(userName === 'teamKay' && password === 12) {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-           
           <LockOutlinedIcon />
-          
         </Avatar>
         <Link color="inherit" href="/">
         <Typography component="h1" variant="h5">
@@ -77,6 +86,7 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={e=> setUserName(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -88,20 +98,29 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={e => setPassword(e.target.value)}
           />
-          <Link href="/homepage">
-          <Button>
+          <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onSubmit={(e) => {
+              e.preventDefault();
+              if(checkCredentials()) {
+                history.push('/');
+              } else {
+                setLoginError('Wrong Credentials');
+              }
+            }}
           >
             Sign In
-          </Button>
-          </Link>
-            
+          </Button>   
         </form>
+        {
+          loginError && <p>{loginError}</p>
+        }
       </div>
       <Box mt={8}>
         <Copyright />
@@ -109,3 +128,5 @@ export default function SignIn() {
     </Container>
   );
 }
+
+export default SignIn;
