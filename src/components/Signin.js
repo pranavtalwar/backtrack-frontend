@@ -1,23 +1,14 @@
 import React, { useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
+import { Avatar, Button, CssBaseline, Container, TextField, Box, Typography } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 
-
-function Copyright() {
+const Copyright = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="/">
         BackTrack
-      </Link>{' '}
+      {' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -57,10 +48,21 @@ const SignIn = (props)  => {
   const { history } = props;
 
   const checkCredentials = () => {
-    if(userName === 'teamKay' && password === 12) {
+    if(userName === 'teamKay' && password === '12') {
       return true;
     }
     return false;
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    if(checkCredentials()) {
+      console.log('cred correct')
+      history.push('/');
+    } else {
+      setLoginError(true);
+      console.log(loginError);
+    }
   }
 
   return (
@@ -70,12 +72,12 @@ const SignIn = (props)  => {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Link color="inherit" href="/">
         <Typography component="h1" variant="h5">
           BackTrack Application
         </Typography>
-        </Link>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} 
+          onSubmit={handleSubmit}
+        >
           <TextField
             variant="outlined"
             margin="normal"
@@ -87,6 +89,7 @@ const SignIn = (props)  => {
             autoComplete="email"
             autoFocus
             onChange={e=> setUserName(e.target.value)}
+            error={!!loginError}
           />
           <TextField
             variant="outlined"
@@ -99,6 +102,8 @@ const SignIn = (props)  => {
             id="password"
             autoComplete="current-password"
             onChange={e => setPassword(e.target.value)}
+            error={!!loginError}
+            helperText={loginError && 'Wrong Credentials'}
           />
           <Button
             type="submit"
@@ -106,21 +111,10 @@ const SignIn = (props)  => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onSubmit={(e) => {
-              e.preventDefault();
-              if(checkCredentials()) {
-                history.push('/');
-              } else {
-                setLoginError('Wrong Credentials');
-              }
-            }}
           >
             Sign In
           </Button>   
         </form>
-        {
-          loginError && <p>{loginError}</p>
-        }
       </div>
       <Box mt={8}>
         <Copyright />

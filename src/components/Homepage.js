@@ -53,9 +53,8 @@ export default function Homepage() {
 
   return (
 
-    //if there is no project yet
     <div className={classes.root}>
-    <AppBar pageName = 'HomePage' />
+    <AppBar pagename = 'HomePage' />
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
