@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CreateProject() {
+export default () => {
   const classes = useStyles();
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { AppBar, Container, CssBaseline, Drawer, Divider, Grid, IconButton, List, Paper, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Button, Container, CssBaseline, Drawer, Divider, Grid, IconButton, List, Paper, Toolbar, Typography, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -71,7 +71,7 @@ const useStyles = makeStyles(theme => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: '100vh',
+    height: '200vh',
     overflow: 'auto',
   },
   container: {
@@ -91,7 +91,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ProductBacklog() {
+export default () =>{
   const classes = useStyles();
   const [open, setOpen] = useState(true);
   const handleDrawerOpen = () => {
@@ -119,11 +119,7 @@ export default function ProductBacklog() {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Product Backlog
           </Typography>
-          {/* <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton> */}
+          <Button color="inherit">Logout</Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -146,7 +142,7 @@ export default function ProductBacklog() {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={0}>
-            <Grid item xs={100} md={100} lg={100}>
+            <Grid item xs={100} md={100} lg={300}>
               <Paper className={fixedHeightPaper}>
                <center>
                 <Card priority = '1' pbiName= 'First PBI' storyPoint= 'This is the story point' description ='This is the description. please pass: priority, pbiName, storyPoint, description as props into card' />

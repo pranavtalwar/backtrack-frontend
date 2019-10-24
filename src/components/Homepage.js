@@ -42,11 +42,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Homepage() {
+export default () => {
   const classes = useStyles();
 
   return (
-
     <div className={classes.root}>
     <AppBar pagename = 'HomePage' />
       <AppBar position="static">
@@ -60,9 +59,7 @@ export default function Homepage() {
           <Button color="inherit">Logout</Button>
         </Toolbar>
       </AppBar>
-
       <Container className={classes.marginAutoContainer}>
-
     <Card className={classes.card}>
     <Typography color="inherit" variant="h4" className={classes.header} >
         You don't seem to be working on any project.

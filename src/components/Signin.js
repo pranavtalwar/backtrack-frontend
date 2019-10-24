@@ -47,7 +47,7 @@ const SignIn = (props)  => {
     e.preventDefault();
     if(checkCredentials()) {
       console.log('cred correct')
-      history.push('/');
+      history.push('/homepage');
     } else {
       setLoginError(true);
       console.log(loginError);
