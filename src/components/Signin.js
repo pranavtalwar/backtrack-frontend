@@ -77,7 +77,7 @@ const SignIn = (props)  => {
             name="email"
             autoComplete="email"
             autoFocus
-            onChange={e=> setUserName(e.target.value)}
+            onChange={e => setUserName(e.target.value)}
             error={!!loginError}
           />
           <TextField

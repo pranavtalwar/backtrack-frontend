@@ -9,25 +9,25 @@ export const mainListItems = (
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText inset = 'true' primary="Dashboard" />
+      <ListItemText primary="Dashboard" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
         <DoubleArrow />
       </ListItemIcon>
-      <ListItemText inset = 'true' primary="Current Sprint" />
+      <ListItemText primary="Current Sprint" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
         <Create />
       </ListItemIcon>
-      <ListItemText inset = 'true' primary="Create Sprint" />
+      <ListItemText primary="Create Sprint" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
         <Announcement />
       </ListItemIcon>
-      <ListItemText inset = 'true' primary="Backlog" />
+      <ListItemText primary="Backlog" />
     </ListItem>
   </div>
 );
