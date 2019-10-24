@@ -145,7 +145,6 @@ export default () => {
           fetch(url)
           .then(getResponse => getResponse.json())
           .then(getJson => setPbiArray(getJson))
-          .then(() => console.log('pbi', pbiArray));
         }
       });
      
