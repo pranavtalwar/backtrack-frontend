@@ -128,7 +128,7 @@ export default () => {
   const handleSubmit = e => {
     e.preventDefault();
     if(validation()) {
-      fetch(url + "create/", {
+      fetch(url, {
         method: 'POST',
         body: JSON.stringify({
           name, description, estimate, priority
@@ -154,6 +154,22 @@ export default () => {
       setEstimate(0); 
     }
   };
+
+  const handleDelete = (id) => {
+    fetch(url + id + '/', {
+      method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(json => {
+      console.log(json)
+      if(json.status_code === 200) {
+        console.log('created')
+        fetch(url)
+        .then(getResponse => getResponse.json())
+        .then(getJson => setPbiArray(getJson))
+      }
+    })
+  }
 
   return (
     <div className={classes.root}>
@@ -250,7 +266,7 @@ export default () => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
-                  <PBIList pbis={pbiArray}/>
+                  <PBIList pbis={pbiArray} deletePBI={handleDelete}/>
                 </Paper>
               </Grid>
             </Grid>
