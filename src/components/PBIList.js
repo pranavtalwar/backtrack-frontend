@@ -34,6 +34,7 @@ const PBIList = (props) => {
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Priority</TableCell>
+                <TableCell>Estimate</TableCell>
                 <TableCell>Status</TableCell>
             </TableRow>
             </TableHead>
@@ -44,6 +45,7 @@ const PBIList = (props) => {
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.priority}</TableCell>
+                <TableCell>{row.estimate}</TableCell>
                 <TableCell>{row.status}</TableCell>
                 <TableCell>
                     <Button
