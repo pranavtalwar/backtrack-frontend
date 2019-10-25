@@ -163,7 +163,7 @@ export default () => {
     .then(json => {
       console.log(json)
       if(json.status_code === 200) {
-        console.log('created')
+        console.log('deleted')
         fetch(url)
         .then(getResponse => getResponse.json())
         .then(getJson => setPbiArray(getJson))
