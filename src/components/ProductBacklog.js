@@ -113,6 +113,7 @@ export default () => {
   };
 
   useEffect(() => {
+    console.log(url);
     fetch(url)
     .then(response => response.json())
     .then(json => setPbiArray(json));
@@ -164,6 +165,31 @@ export default () => {
       console.log(json)
       if(json.status_code === 200) {
         console.log('deleted')
+        fetch(url)
+        .then(getResponse => getResponse.json())
+        .then(getJson => setPbiArray(getJson))
+      }
+    })
+  }
+
+  const handleUpdate = (id, updateName, updateDescription, updateEstimate, updatePriority) => {
+    fetch(url + id + '/', {
+      method: 'PATCH',
+      body: JSON.stringify({
+        name: updateName,
+        description: updateDescription,
+        estimate: updateEstimate,
+        priority: updatePriority
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(json => {
+      console.log(json)
+      if(json.status_code === 200) {
+        console.log('updated')
         fetch(url)
         .then(getResponse => getResponse.json())
         .then(getJson => setPbiArray(getJson))
@@ -266,7 +292,7 @@ export default () => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
-                  <PBIList pbis={pbiArray} deletePBI={handleDelete}/>
+                  <PBIList pbis={pbiArray} deletePBI={handleDelete} updatePBI={handleUpdate}/>
                 </Paper>
               </Grid>
             </Grid>
