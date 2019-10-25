@@ -140,7 +140,7 @@ export default () => {
       .then(response => response.json())
       .then(json => {
         console.log(json)
-        if(json.status_code === 200) {
+        if(json.status_code === 201) {
           console.log('created')
           fetch(url)
           .then(getResponse => getResponse.json())
