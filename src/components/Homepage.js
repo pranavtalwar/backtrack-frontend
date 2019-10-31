@@ -1,45 +1,51 @@
 import React from 'react';
-import { AppBar, Button, Card, Container, Icon, IconButton, Toolbar, } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import MenuIcon from '@material-ui/icons/Menu';
+import { Paper, Link, Grid, Container, Typography, CssBaseline} from '@material-ui/core';
+import {Button, Card} from '@material-ui/core';
+import AppBar from './AppBar';
 
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://material-ui.com/">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
 const useStyles = makeStyles(theme => ({
   root: {
+    display: 'flex',
+  },
+
+  appBarSpacer: theme.mixins.toolbar,
+  content: {
     flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  container: {
+    paddingTop: theme.spacing(6),
+    paddingBottom: theme.spacing(4),
+    height: '100hv'
   },
-  title: {
-    flexGrow: 1,
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+    height: '100hv',
   },
-  card:{
-      width: "100%",
-      height: "60%",
-      marginTop: theme.spacing(10),
-      display:"flex",
-      flexDirection:"column",
-      alignItems: "center",
-      justifyContent: "center",
-      justifyItems:"center",
+  card: {
+    height: '50vh',
   },
   header:{
-      padding: theme.spacing(8),
-  },
-  button: {
-    marginBottom: theme.spacing(10),
-
-  },
-  marginAutoContainer: {
-    width: '80%',
-
-    maxWidth:"md",
-  },
-  marginAutoItem: {
-    margin: 'auto'
-  },
+    padding: theme.spacing(8),
+},
 }));
 
 export default () => {
@@ -47,34 +53,32 @@ export default () => {
 
   return (
     <div className={classes.root}>
-    <AppBar pagename = 'HomePage' />
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Developer
-          </Typography>
-          <Button color="inherit">Logout</Button>
-        </Toolbar>
-      </AppBar>
-      <Container className={classes.marginAutoContainer}>
-    <Card className={classes.card}>
-    <Typography color="inherit" variant="h4" className={classes.header} >
-        You don't seem to be working on any project.
-    </Typography>
-    <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        endIcon={<Icon color="primary">add_circle</Icon>}//{<Icon className="fas fa-plus"/>}
-      >
-        Create new project
-      </Button>
-
-    </Card>
-    </Container>
+      <CssBaseline />
+      <AppBar heading='Homepage'/>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Container maxWidth="lg" className={classes.container}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+              <Card className={classes.card}>
+                <Typography color="inherit" variant="h4" className={classes.header} >
+                    You don't seem to be working on any project.
+                </Typography>
+                  <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                    >
+                      Create new project
+                  </Button>
+               </Card>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Container>
+        <Copyright />
+      </main>
     </div>
   );
 }
