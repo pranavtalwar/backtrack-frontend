@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Signin from './components/Signin';
 import Homepage from './components/Homepage';
 import ProductBacklog from './components/ProductBacklog/ProductBacklog';
+import CreateSprint from './components/CreateSprint';
 
 import './App.css';
 
@@ -14,6 +15,7 @@ function App() {
             <Route path="/" exact component={Signin}/>
             <Route path="/homepage" component={Homepage}/>
             <Route path="/backlog" component={ProductBacklog}/>
+            <Route path="/createsprint" component={CreateSprint} />
           </Switch>
       </div>
     </BrowserRouter>
