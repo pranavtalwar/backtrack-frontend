@@ -5,7 +5,7 @@ import {Button, CssBaseline,Paper,
 import { makeStyles } from '@material-ui/core/styles';
 import PBIList from './PBIList';
 import Copyright from './Copyright';
-import AppBar from './AppBar';
+import AppBar from './AppBar/AppBar';
 
 const useStyles = makeStyles(theme => ({
   root: {

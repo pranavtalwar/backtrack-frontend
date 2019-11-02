@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Grid, Container, Typography, CssBaseline} from '@material-ui/core';
 import {Button, Card} from '@material-ui/core';
-import AppBar from './AppBar';
+import AppBar from './AppBar/AppBar';
 import Copyright from './Copyright';
 
 const useStyles = makeStyles(theme => ({

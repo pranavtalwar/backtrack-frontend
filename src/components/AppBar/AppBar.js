@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { AppBar, Button, Drawer, Divider, 
          IconButton, List, Toolbar, Typography
@@ -6,7 +6,7 @@ import { AppBar, Button, Drawer, Divider,
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { mainListItems } from './listItems';
+import { menuItems } from './MenuItems';
 
  
 const drawerWidth = 240;
@@ -92,39 +92,56 @@ export default (props) => {
       };
     return(
         <div className={classes.root}>
-            <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-                <Toolbar className={classes.toolbar}>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={handleDrawerOpen}
-                    className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-                >
-                    <MenuIcon />
-                </IconButton>
-                <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                    {props.heading}
-                </Typography>
-                <Button color="inherit">Logout</Button>
-                </Toolbar>
-                </AppBar>
-                <Drawer
-                variant="permanent"
-                classes={{
-                paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-                }}
-                open={open}
-                >
-                    <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                    </div>
-                    <Divider />
-                    <List>{mainListItems}</List>
-                    <Divider />
-                </Drawer>
+          <AppBar 
+            position="absolute" 
+            className={clsx(classes.appBar, open && classes.appBarShift)}
+          >
+            <Toolbar className={classes.toolbar}>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography 
+                component="h1" 
+                variant="h6" 
+                color="inherit"
+                noWrap 
+                className={classes.title}
+              >
+                {props.heading}
+              </Typography>
+              <Button 
+                color="inherit"
+              >
+                Logout
+              </Button>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant="permanent"
+            classes={{
+            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+            }}
+            open={open}
+          >
+            <div 
+              className={classes.toolbarIcon}
+            >
+              <IconButton 
+                onClick={handleDrawerClose}
+              >
+                <ChevronLeftIcon />
+              </IconButton>
             </div>
+            <Divider />
+            <List>{menuItems}</List>
+            <Divider />
+          </Drawer>
+        </div>
     )
 }

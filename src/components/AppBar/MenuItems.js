@@ -4,7 +4,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import { DoubleArrow, Create, Announcement } from '@material-ui/icons';
 import { NavLink } from 'react-router-dom';
 
-export const mainListItems = (
+export const menuItems = (
   <div>
     <NavLink 
       to='/homepage' 
