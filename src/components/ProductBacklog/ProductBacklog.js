@@ -3,9 +3,9 @@ import {Button, CssBaseline,Paper,
         InputLabel, TextField, MenuItem, Select, Container, Grid 
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import PBIList from './PBIList';
-import Copyright from './Copyright';
-import AppBar from './AppBar/AppBar';
+import PBITable from './PBITable';
+import Copyright from '../Copyright';
+import AppBar from '../AppBar/AppBar';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -196,7 +196,7 @@ export default () => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
-                  <PBIList pbis={pbiArray} deletePBI={handleDelete} updatePBI={handleUpdate}/>
+                  <PBITable pbis={pbiArray} deletePBI={handleDelete} updatePBI={handleUpdate}/>
                 </Paper>
               </Grid>
             </Grid>

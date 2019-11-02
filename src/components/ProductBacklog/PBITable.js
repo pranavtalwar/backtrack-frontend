@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, 
-            DialogTitle, Table, TableBody, TableCell, TableHead, TableRow, TextField, InputLabel, Select, MenuItem
+         DialogTitle, Table, TableBody, TableCell, TableHead, 
+         TableRow, TextField, InputLabel, Select, MenuItem,
+         Typography
 } from '@material-ui/core';
-import Title from './Title';
 
-const PBIList = (props) => {
+const PBITable = (props) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [updateObj, setUpdateObj] = useState({
         name: '',
@@ -26,7 +27,9 @@ const PBIList = (props) => {
     
     return (
         <React.Fragment>
-        <Title>Product Backlog</Title>
+        <Typography component="h2" variant="h6" color="primary" gutterBottom>
+            Product Backlog
+        </Typography>
         <Table size="small">
             <TableHead>
             <TableRow>
@@ -148,4 +151,4 @@ const PBIList = (props) => {
     );
 }
 
-export default PBIList;
+export default PBITable;
