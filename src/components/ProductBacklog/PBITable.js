@@ -10,12 +10,11 @@ const PBITable = (props) => {
     const [updateObj, setUpdateObj] = useState({
         name: '',
         description: '',
-        estimate: '',
+        storyPoint: '',
         priority: '',
         id: ''
     });
-    const { pbis, deletePBI, updatePBI } = props;
-    const priorityList = [1,2,3,4,5,6,7,8,9,10];
+    const { pbis, deletePBI, updatePBI, priorityList, storyPointList } = props;
 
     const handleClickOpen = () => {
         setDialogOpen(true);
@@ -37,7 +36,7 @@ const PBITable = (props) => {
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Priority</TableCell>
-                <TableCell>Estimate</TableCell>
+                <TableCell>Story Point</TableCell>
                 <TableCell>Status</TableCell>
             </TableRow>
             </TableHead>
@@ -48,7 +47,7 @@ const PBITable = (props) => {
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.priority}</TableCell>
-                <TableCell>{row.estimate}</TableCell>
+                <TableCell>{row.story_points}</TableCell>
                 <TableCell>{row.status}</TableCell>
                 <TableCell>
                     <Button
@@ -72,7 +71,7 @@ const PBITable = (props) => {
                                     name: row.name,
                                     description: row.description,
                                     priority: row.priority,
-                                    estimate: row.estimate
+                                    storyPoint: row.story_points
                                 }
                             );
                             handleClickOpen();
@@ -121,14 +120,14 @@ const PBITable = (props) => {
             </Select> 
             <br />
             <br />
-            <InputLabel>Estimate</InputLabel>
+            <InputLabel>Story Point</InputLabel>
             <Select
-                onChange={e => setUpdateObj({ ...updateObj, estimate: e.target.value })}
-                value={updateObj.priority}
+                onChange={e => setUpdateObj({ ...updateObj, storyPoint: e.target.value })}
+                value={updateObj.storyPoint}
             >
                 {
-                priorityList.map(priorityItem => (
-                    <MenuItem value={priorityItem}>{priorityItem}</MenuItem>
+                    storyPointList.map(storyPoint => (
+                    <MenuItem value={storyPoint}>{storyPoint}</MenuItem>
                 ))
                 }
             </Select>
@@ -138,7 +137,7 @@ const PBITable = (props) => {
                 Cancel
             </Button>
             <Button onClick={() => {
-                updatePBI(updateObj.id, updateObj.name, updateObj.description, updateObj.estimate, updateObj.priority);
+                updatePBI(updateObj.id, updateObj.name, updateObj.description, updateObj.storyPoint, updateObj.priority);
                 handleClose();
                 }
             } 

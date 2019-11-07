@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, CssBaseline,Paper, Table, TableBody, TableRow, TableCell,
-        InputLabel, TextField, MenuItem, Select, Container, Grid, 
+import { Button, CssBaseline, Table, TableBody, TableRow, TableCell,
+        InputLabel, TextField, MenuItem, Select, 
 } from '@material-ui/core';
 import {
     MuiPickersUtilsProvider,
@@ -160,10 +160,9 @@ export default () => {
             >
             {
                 pbiArray.map(pbi => (
-                  <MenuItem value={pbi}>{pbi.name}</MenuItem>
+                  <MenuItem value={pbi.id}>{pbi.name}</MenuItem>
                 ))
             }
-            <MenuItem value={hello}>Make Soup</MenuItem>
             </Select>
             <Button
               type="submit"
