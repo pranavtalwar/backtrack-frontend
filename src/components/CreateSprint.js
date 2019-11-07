@@ -95,6 +95,7 @@ export default () => {
     if(curTask.description !== null && curTask.effort !== null) {
       newPBITasks[pbiIndex].tasks.push(curTask);
       setPBITasks(newPBITasks);
+      setCurTask()
     } else if (curTask.description==null){
       alert("Please enter task description")
     } else {
@@ -173,66 +174,68 @@ export default () => {
           (
             pbiTasks.map(row => (
               <React.Fragment>
-              <div className={classes.newtext}>
-                Add Tasks for ID: {row.id}  Name: {row.name} <br/>
-              </div>
-              <br/>
-              {
-                (row.tasks.length > 0) && (
-                  <Container maxWidth="lg" className={classes.container}>
-                    <Grid container spacing={3}>
-                      <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-                        <Table>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell>Description</TableCell>
-                              <TableCell>Effort</TableCell>
-                            </TableRow>
-
-                            {row.tasks.map(task => (
+                <div className={classes.newtext}>
+                  Add Tasks for ID: {row.id}  Name: {row.name} <br/>
+                </div>
+                <br/>
+                {
+                  (row.tasks.length > 0) && (
+                    <Container maxWidth="lg" className={classes.container}>
+                      <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                          <Paper className={classes.paper}>
+                          <Table>
+                            <TableBody>
                               <TableRow>
-                                  <TableCell>{task.description}</TableCell>
-                                  <TableCell>{task.effort}</TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell>Effort</TableCell>
                               </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </Container>
-                )}
-              )}
-              <form onSubmit={(e) => handleTaskAdd(e, row.id)}>
-                <TextField 
-                  multiline
-                  label="Description"
-                  onChange={e => setCurTask({ ...curTask, description: e.target.value })}
-                />
-                <br />
-                <TextField 
-                  multiline
-                  label="Effort"
-                  onChange={e => setCurTask({ ...curTask, effort: e.target.value })}
-                />
-                <br />
-                <br />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                >
-                  Add
-                </Button>
-              </form>
-            </React.Fragment>
+
+                              {row.tasks.map(task => (
+                                <TableRow>
+                                    <TableCell>{task.description}</TableCell>
+                                    <TableCell>{task.effort}</TableCell>
+                                </TableRow>
+                              ))}
+                              </TableBody>
+                            </Table>
+                          </Paper>
+                        </Grid>
+                      </Grid>
+                    </Container>
+                  )
+                }
+                <form onSubmit={(e) => handleTaskAdd(e, row.id)}>
+                  <TextField 
+                    multiline
+                    label="Description"
+                    onChange={e => setCurTask({ ...curTask, description: e.target.value })}
+                  />
+                  <br />
+                  <TextField 
+                    type="number"
+                    label="Effort"
+                    onChange={e => setCurTask({ ...curTask, effort: e.target.value })}
+                  />
+                  <br />
+                  <br />
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                  >
+                    Add Task
+                  </Button>
+                  <br />
+                  <br />
+                </form>
+              </React.Fragment>
             ))
           ):
           (
             <center>Please Add PBI</center>
           )
-        }
+      }
       </div> 
         <br/>
         <br/>
