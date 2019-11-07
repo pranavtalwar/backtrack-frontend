@@ -54,6 +54,10 @@ export default () => {
     fetch(url)
     .then(response => response.json())
     .then(json => {
+      if(json.length === 0) {
+        setPriorityList([1]);
+        return json;
+      }
       let max = 1;
       for (let i = 0; i< json.length; i++) {
         if(json[i].priority > max) {
@@ -96,6 +100,24 @@ export default () => {
           console.log('created')
           fetch(url)
           .then(getResponse => getResponse.json())
+          .then(json => {
+            if(json.length === 0) {
+              setPriorityList([1]);
+              return json;
+            }
+            let max = 1;
+            for (let i = 0; i< json.length; i++) {
+              if(json[i].priority > max) {
+                max = json[i].priority;
+              }
+            }
+            const newpriorityList = [];
+            for (let j = 1; j <= max + 1; j++) {
+              newpriorityList.push(j);
+            }
+            setPriorityList(newpriorityList);
+            return json;
+          })
           .then(getJson => setPbiArray(getJson))
         }
       });
@@ -118,6 +140,25 @@ export default () => {
         console.log('deleted')
         fetch(url)
         .then(getResponse => getResponse.json())
+        .then(json => {
+          if(json.length === 0) {
+            setPriorityList([1]);
+            return json;
+          }
+          let max = 1;
+          for (let i = 0; i < json.length; i++) {
+            if(json[i].priority > max) {
+              max = json[i].priority;
+            }
+          }
+          const newpriorityList = [];
+          for (let j = 1; j <= (max + 1); j++) {
+            newpriorityList.push(j);
+          }
+          console.log(newpriorityList);
+          setPriorityList(newpriorityList);
+          return json;
+        })
         .then(getJson => setPbiArray(getJson))
       }
     })
@@ -143,6 +184,24 @@ export default () => {
         console.log('updated')
         fetch(url)
         .then(getResponse => getResponse.json())
+        .then(json => {
+          if(json.length === 0) {
+            setPriorityList([1]);
+            return json;
+          }
+          let max = 1;
+          for (let i = 0; i< json.length; i++) {
+            if(json[i].priority > max) {
+              max = json[i].priority;
+            }
+          }
+          const newpriorityList = [];
+          for (let j = 1; j <= max + 1; j++) {
+            newpriorityList.push(j);
+          }
+          setPriorityList(newpriorityList);
+          return json;
+        })
         .then(getJson => setPbiArray(getJson))
       }
     })
