@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, CssBaseline, Table, TableBody, TableRow, TableCell,
-        InputLabel, TextField, MenuItem, Select, 
+        InputLabel, TextField, MenuItem, Select, Container, Grid, Paper
 } from '@material-ui/core';
 import {
     MuiPickersUtilsProvider,
@@ -56,16 +56,9 @@ export default () => {
   const [pbiArray, setPbiArray] = useState([]);
   const [currPBI, setCurrPBI] = useState(null);
   const [pbiTasks, setPBITasks] = useState([]);
-  const [isAdded, setIsAdded] = useState(false);
   const [curTask, setCurTask] = useState({
     description: null,
     effort: null,
-  });
-
-  // const [addPbis, setAddPbis] = useState([]);
-  const hello = ({
-    id: 12,
-    name: "Make Soup",
   });
 
   const url = "http://127.0.0.1:8000/pbi/";
@@ -78,8 +71,7 @@ export default () => {
 
   const handlePBIAdd = (e) => {
     e.preventDefault();
-    console.log(currPBI);
-    if(currPBI!=null){
+    if(currPBI !== null){
       if(pbiTasks.some(pbiTask => pbiTask.id === currPBI.id)){
         alert("Please select a different PBI")
       } else {
@@ -90,24 +82,24 @@ export default () => {
         }]);
       }
     } else {
-      alert("Please select a PBI")
+      alert("Please select a PBI");
     }
-    setIsAdded(true);
+    setCurrPBI(null);
     console.log(pbiTasks);
   }
 
-  const handleTaskAdd = (e) => {
+  const handleTaskAdd = (e,id) => {
     e.preventDefault();
-    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.id === currPBI.id));
-    console.log("Hello");
-    if(curTask.description!=null && curTask.effort!=null){
-      pbiTasks[pbiIndex].tasks.push(curTask);
+    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.id === id));
+    const newPBITasks= [...pbiTasks];
+    if(curTask.description !== null && curTask.effort !== null) {
+      newPBITasks[pbiIndex].tasks.push(curTask);
+      setPBITasks(newPBITasks);
     } else if (curTask.description==null){
       alert("Please enter task description")
     } else {
       alert("Please enter task effort")
     }
-    console.log(pbiTasks);
   }
 
   
@@ -160,7 +152,7 @@ export default () => {
             >
             {
                 pbiArray.map(pbi => (
-                  <MenuItem value={pbi.id}>{pbi.name}</MenuItem>
+                  <MenuItem value={pbi}>{pbi.name}</MenuItem>
                 ))
             }
             </Select>
@@ -172,68 +164,76 @@ export default () => {
             >
               Add
             </Button>
+            <br />
         </form>
         <br/>
         <br/>
-          <div className={classes.pbitext}>
-          {isAdded? 
-            (
-              pbiTasks.map(row => (
-                <>
-                <div className={classes.newtext}>
-                Add Tasks: <br/>
-                </div>
-                <br/>
-                ID: {row.id}  Name: {row.name} <br/>
-                {
-                  (row.tasks.length>0)? (
-                    <Table>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>Description</TableCell>
-                          <TableCell>Effort</TableCell>
-                        </TableRow>
+        <div className={classes.pbitext}>
+        {pbiTasks.length > 0 ? 
+          (
+            pbiTasks.map(row => (
+              <React.Fragment>
+              <div className={classes.newtext}>
+                Add Tasks for ID: {row.id}  Name: {row.name} <br/>
+              </div>
+              <br/>
+              {
+                (row.tasks.length > 0) && (
+                  <Container maxWidth="lg" className={classes.container}>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12}>
+                        <Paper className={classes.paper}>
+                        <Table>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>Description</TableCell>
+                              <TableCell>Effort</TableCell>
+                            </TableRow>
 
-                        {row.tasks.map(task => (
-                          <TableRow>
-                              <TableCell>{task.description}</TableCell>
-                              <TableCell>{task.effort}</TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                    </Table>
-                  ) : (
-                    <></>
-                  )
-                }
-                <form onSubmit={handleTaskAdd}>
-                  <TextField 
-                    multiline
-                    label="Description"
-                    onChange={e => setCurTask({ ...curTask, description: e.target.value })}
-                  />
-                  <TextField 
-                    multiline
-                    label="Effort"
-                    onChange={e => setCurTask({ ...curTask, effort: e.target.value })}
-                  />
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Add
-                  </Button>
-                </form>
-              </>
-              ))
-
-            ):
-            (
-              <center>Please Add PBI</center>
-            )
-          }
-        </div> 
+                            {row.tasks.map(task => (
+                              <TableRow>
+                                  <TableCell>{task.description}</TableCell>
+                                  <TableCell>{task.effort}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Paper>
+                    </Grid>
+                  </Grid>
+                </Container>
+                )}
+              )}
+              <form onSubmit={(e) => handleTaskAdd(e, row.id)}>
+                <TextField 
+                  multiline
+                  label="Description"
+                  onChange={e => setCurTask({ ...curTask, description: e.target.value })}
+                />
+                <br />
+                <TextField 
+                  multiline
+                  label="Effort"
+                  onChange={e => setCurTask({ ...curTask, effort: e.target.value })}
+                />
+                <br />
+                <br />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Add
+                </Button>
+              </form>
+            </React.Fragment>
+            ))
+          ):
+          (
+            <center>Please Add PBI</center>
+          )
+        }
+      </div> 
         <br/>
         <br/>
         <br/>
