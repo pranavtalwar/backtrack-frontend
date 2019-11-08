@@ -58,10 +58,11 @@ export default () => {
   const [pbiTasks, setPBITasks] = useState([]);
   const [curTask, setCurTask] = useState({
     description: null,
-    effort: null,
+    effort_hours: null,
   });
 
   const url = "http://127.0.0.1:8000/pbi/";
+  const url2 = "http://127.0.0.1:8000/sprint/";
 
   useEffect(() => {
     fetch(url)
@@ -76,8 +77,7 @@ export default () => {
         alert("Please select a different PBI")
       } else {
         setPBITasks([...pbiTasks, {
-          id: currPBI.id,
-          name: currPBI.name,
+          pbi_id: currPBI.id,
           tasks: []
         }]);
       }
@@ -92,7 +92,7 @@ export default () => {
     e.preventDefault();
     const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.id === id));
     const newPBITasks= [...pbiTasks];
-    if(curTask.description !== null && curTask.effort !== null) {
+    if(curTask.description !== null && curTask.effort_hours !== null) {
       newPBITasks[pbiIndex].tasks.push(curTask);
       setPBITasks(newPBITasks);
     } else if (curTask.description == null) {
@@ -102,7 +102,7 @@ export default () => {
     }
     setCurTask({
       description: null,
-      effort: null
+      effort_hours: null
     });
   }
 
@@ -153,7 +153,7 @@ export default () => {
         let pbiTaskEffortSum = 0;
         for(let i = 0; i < pbiTasks.length; i++) {
           for(let j = 0; j < pbiTasks[i].tasks.length; j++) {
-            pbiTaskEffortSum += parseInt(pbiTasks[i].tasks[j].effort, 10);
+            pbiTaskEffortSum += parseInt(pbiTasks[i].tasks[j].effort_hours, 10);
           }
         }
         if(pbiTaskEffortSum > capacity) {
@@ -162,6 +162,37 @@ export default () => {
         }
       }
     }
+    console.log(JSON.stringify({
+      start_date: startDate.toISOString().substring(0,10),
+      end_date: endDate.toISOString().substring(0,10),
+      capacity: capacity,
+      project: 1,
+      pbis: pbiTasks
+    }));
+    fetch(url2, {
+      method: 'POST',
+      body: JSON.stringify({
+        start_date: startDate.toISOString().substring(0,10),
+        end_date: endDate.toISOString().substring(0,10),
+        capacity: capacity,
+        project: 1,
+        pbis: pbiTasks
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json)
+    .then(json => {
+      alert('Sprint Created');
+      setStartDate(null);
+      setEndDate(null);
+      setCapacity(null);
+      setPbiArray([]);
+      setPBITasks([]);
+      setCurrPBI(null);
+      setCurTask(null);
+    });
   }
 
   return (
@@ -175,7 +206,7 @@ export default () => {
                 <KeyboardDatePicker
                     disableToolbar
                     variant="inline"
-                    format="MM/dd/yyyy"
+                    format="dd/MM/yyyy"
                     margin="normal"
                     label="Sprint Start Date"
                     value={startDate}
@@ -187,7 +218,7 @@ export default () => {
                 <KeyboardDatePicker
                     disableToolbar
                     variant="inline"
-                    format="MM/dd/yyyy"
+                    format="dd/MM/yyyy"
                     margin="normal"
                     label="Sprint End Date"
                     value={endDate}
@@ -262,7 +293,7 @@ export default () => {
                                 {row.tasks.map((task, index) => (
                                   <TableRow>
                                       <TableCell>{task.description}</TableCell>
-                                      <TableCell>{task.effort}</TableCell>
+                                      <TableCell>{task.effort_hours}</TableCell>
                                       <TableCell>
                                         <Button
                                             type="submit"
@@ -293,7 +324,7 @@ export default () => {
                     <TextField 
                       type="number"
                       label="Effort"
-                      onChange={e => setCurTask({ ...curTask, effort: e.target.value })}
+                      onChange={e => setCurTask({ ...curTask, effort_hours: e.target.value })}
                     />
                     <br />
                     <br />
