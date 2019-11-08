@@ -95,15 +95,75 @@ export default () => {
     if(curTask.description !== null && curTask.effort !== null) {
       newPBITasks[pbiIndex].tasks.push(curTask);
       setPBITasks(newPBITasks);
-      setCurTask()
-    } else if (curTask.description==null){
+    } else if (curTask.description == null) {
       alert("Please enter task description")
     } else {
       alert("Please enter task effort")
     }
+    setCurTask({
+      description: null,
+      effort: null
+    });
   }
 
-  
+  const handleRemovePBI = (pbiID) => {
+    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.id === pbiID));
+    const newPBITasks = [...pbiTasks];
+    newPBITasks.splice(pbiIndex, 1);
+    setPBITasks(newPBITasks);
+  }
+
+  const handleTaskDelete = (pbiId, index) => {
+    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.id === pbiId));
+    const newPBITasks = [...pbiTasks];
+    newPBITasks[pbiIndex].tasks.splice(index, 1);
+    setPBITasks(newPBITasks);
+  }
+
+  const handleCreateSprint = () => {
+    let checker = false;
+    if(startDate == null) {
+      alert('Please enter a start date for the sprint');
+      return;
+    }
+    else if(endDate == null) {
+      alert('Please enter an end date for the sprint');
+      return;
+    }
+    else if(capacity == null) {
+      alert('Please enter a capacity for the sprint');
+      return;
+    }
+    else if(pbiTasks.length === 0) {
+      alert('Please select one or more PBIs to add to this sprint');
+      return;
+    }
+    else if(pbiTasks.length > 0) {   
+      for(let i = 0; i < pbiTasks.length; i++) {
+        if(pbiTasks[i].tasks && (pbiTasks[i].tasks.length === 0)) {
+          checker = true;
+          break;
+        }
+      }
+      if(checker) {
+        alert('One of the PBIs you have added has no tasks associated with it');
+        return;
+      }
+      else {
+        let pbiTaskEffortSum = 0;
+        for(let i = 0; i < pbiTasks.length; i++) {
+          for(let j = 0; j < pbiTasks[i].tasks.length; j++) {
+            pbiTaskEffortSum += parseInt(pbiTasks[i].tasks[j].effort, 10);
+          }
+        }
+        if(pbiTaskEffortSum > capacity) {
+          alert('Your total Task Effort is exceeding the capacity');
+          return;
+        }
+      }
+    }
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -170,79 +230,104 @@ export default () => {
         <br/>
         <br/>
         <div className={classes.pbitext}>
-        {pbiTasks.length > 0 ? 
-          (
-            pbiTasks.map(row => (
-              <React.Fragment>
-                <div className={classes.newtext}>
-                  Add Tasks for ID: {row.id}  Name: {row.name} <br/>
-                </div>
-                <br/>
-                {
-                  (row.tasks.length > 0) && (
-                    <Container maxWidth="lg" className={classes.container}>
-                      <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                          <Paper className={classes.paper}>
-                          <Table>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell>Description</TableCell>
-                                <TableCell>Effort</TableCell>
-                              </TableRow>
-
-                              {row.tasks.map(task => (
+          {pbiTasks.length > 0 ? 
+            (
+              pbiTasks.map(row => (
+                <React.Fragment>
+                  <div className={classes.newtext}>
+                    Add Tasks for: {row.name}
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleRemovePBI(row.id)}
+                    >
+                      Remove PBI
+                    </Button>
+                  </div>
+                  <br/>
+                  {
+                    (row.tasks.length > 0) && (
+                      <Container maxWidth="lg" className={classes.container}>
+                        <Grid container spacing={3}>
+                          <Grid item xs={12}>
+                            <Paper className={classes.paper}>
+                            <Table>
+                              <TableBody>
                                 <TableRow>
-                                    <TableCell>{task.description}</TableCell>
-                                    <TableCell>{task.effort}</TableCell>
+                                  <TableCell>Description</TableCell>
+                                  <TableCell>Effort</TableCell>
                                 </TableRow>
-                              ))}
-                              </TableBody>
-                            </Table>
-                          </Paper>
+
+                                {row.tasks.map((task, index) => (
+                                  <TableRow>
+                                      <TableCell>{task.description}</TableCell>
+                                      <TableCell>{task.effort}</TableCell>
+                                      <TableCell>
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => handleTaskDelete(row.id, index)}
+                                        >
+                                            Delete
+                                        </Button> 
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                                </TableBody>
+                              </Table>
+                            </Paper>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </Container>
-                  )
-                }
-                <form onSubmit={(e) => handleTaskAdd(e, row.id)}>
-                  <TextField 
-                    multiline
-                    label="Description"
-                    onChange={e => setCurTask({ ...curTask, description: e.target.value })}
-                  />
-                  <br />
-                  <TextField 
-                    type="number"
-                    label="Effort"
-                    onChange={e => setCurTask({ ...curTask, effort: e.target.value })}
-                  />
-                  <br />
-                  <br />
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Add Task
-                  </Button>
-                  <br />
-                  <br />
-                </form>
-              </React.Fragment>
-            ))
-          ):
-          (
-            <center>Please Add PBI</center>
-          )
-      }
-      </div> 
+                      </Container>
+                    )
+                  }
+                  <form onSubmit={(e) => handleTaskAdd(e, row.id)}>
+                    <TextField 
+                      multiline
+                      label="Description"
+                      onChange={e => setCurTask({ ...curTask, description: e.target.value })}
+                    />
+                    <br />
+                    <TextField 
+                      type="number"
+                      label="Effort"
+                      onChange={e => setCurTask({ ...curTask, effort: e.target.value })}
+                    />
+                    <br />
+                    <br />
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                    >
+                      Add Task
+                    </Button>
+                    <br />
+                    <br />
+                  </form>
+                </React.Fragment>
+              ))
+            ):
+            (
+              <center>Please Add PBI</center>
+            )
+        }
+        </div> 
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          onClick={handleCreateSprint}
+        >
+          Create Sprint
+        </Button>
         <br/>
         <br/>
         <br/>
         <Copyright />   
-      </div>
-      
+        </div>
     </div>
   );
 }
