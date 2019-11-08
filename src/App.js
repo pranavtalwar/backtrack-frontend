@@ -4,6 +4,7 @@ import Signin from './components/Signin';
 import Homepage from './components/Homepage';
 import ProductBacklog from './components/ProductBacklog/ProductBacklog';
 import CreateSprint from './components/CreateSprint';
+import CurrentSprint from './components/CurrentSprint';
 
 import './App.css';
 
@@ -16,6 +17,7 @@ function App() {
             <Route path="/homepage" component={Homepage}/>
             <Route path="/backlog" component={ProductBacklog}/>
             <Route path="/createsprint" component={CreateSprint} />
+            <Route path="/currentsprint" component={CurrentSprint} />
           </Switch>
       </div>
     </BrowserRouter>
