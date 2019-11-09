@@ -12,13 +12,13 @@ const pbiList = {
   "project": 1,
   "pbis": [
     { "pbi_id": 6,
-      "tasks": [{"description":  "Create", "effort_hours": 10, "status": "Completed"},
-           {"developer":  "2", "description":  "New", "effort_hours": 8, "status": "In progress"}
+      "tasks": [{"description":  "Create", "effort_hours": 10, "status": true},
+           {"developer":  "2", "description":  "New", "effort_hours": 8, "status": false}
       ]
     },
     { "pbi_id":5,
-      "tasks": [{"description":  "Create", "effort_hours": 5, "status": "Completed"},
-           {"developer":  "2", "description":  "New", "effort_hours": 6, "status": "In progress"}
+      "tasks": [{"description":  "Create", "effort_hours": 5, "status": true},
+           {"developer":  "2", "description":  "New", "effort_hours": 6, "status": false}
       ]
     }
   ]
@@ -82,8 +82,15 @@ export default () => {
     .then(json => setPbiArray(json));
   }, []);
 
+
   let tmpBurndown = burndown;
   let tmpCompleted = completed;
+  let pbiBurndown = 0;
+  let pbiCompleted = 0;
+  const reset = () =>{
+    pbiBurndown = 0;
+    pbiCompleted = 0;
+  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -103,6 +110,9 @@ export default () => {
           { pbiList.pbis.length>0? (
               pbiList.pbis.map(row => (
                 <>
+                { 
+                  reset()
+                }
                 <div className={classes.newtext}>
                 </div>
                 <br/>
@@ -117,21 +127,23 @@ export default () => {
                           <TableRow>
                             <TableCell>Description</TableCell>
                             <TableCell>Effort</TableCell>
+                            <TableCell>Status</TableCell>
                             <TableCell></TableCell>
                           </TableRow>
 
                           {row.tasks.map(task => {
-                            
-                            
+                            pbiBurndown = pbiBurndown + task.effort_hours;
                             tmpBurndown = tmpBurndown + task.effort_hours;
-                            if(task.status==="Completed"){
+                            if(task.status===true){
                               tmpCompleted = tmpCompleted + task.effort_hours;
+                              pbiCompleted = pbiCompleted + task.effort_hours;
                             }
-                            console.log("tmpBurndown " + tmpBurndown);
+                            console.log("pbiBurndown " + pbiBurndown);
                             return(
                             <TableRow>
                                 <TableCell>{task.description}</TableCell>
                                 <TableCell>{task.effort_hours}</TableCell>
+                                <TableCell>{task.status? ("Completed"): ("In progress")}</TableCell>
                                 <TableCell>
                                   <Button
                                     type="submit"
@@ -154,8 +166,9 @@ export default () => {
                     </>
                   )
                 }
-
-
+                <b>PBI Completed: </b> {pbiCompleted} <br/>
+                <b>PBI Burndown: </b> {pbiBurndown} <br/>
+                <b>Leftover: </b> {pbiBurndown-pbiCompleted}
               </>
               ))
                
@@ -168,8 +181,9 @@ export default () => {
           }
           <br/>
         <center>
+        <b>Sprint Completed: </b>{tmpCompleted} <br/>
         <b>Sprint Burndown: </b>{tmpBurndown} <br/>
-        <b>Completed: </b>{tmpCompleted}
+        <b>Leftover: </b> {tmpBurndown-tmpCompleted}
         </center>
         </div> 
         <br/>
