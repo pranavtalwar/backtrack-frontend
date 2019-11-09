@@ -108,14 +108,14 @@ export default () => {
   }
 
   const handleRemovePBI = (pbiID) => {
-    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.id === pbiID));
+    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.pbi_id === pbiID));
     const newPBITasks = [...pbiTasks];
     newPBITasks.splice(pbiIndex, 1);
     setPBITasks(newPBITasks);
   }
 
   const handleTaskDelete = (pbiId, index) => {
-    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.pbi_id === pbiId));
+    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.id === pbiId));
     const newPBITasks = [...pbiTasks];
     newPBITasks[pbiIndex].tasks.splice(index, 1);
     setPBITasks(newPBITasks);
@@ -300,7 +300,7 @@ export default () => {
                                             type="submit"
                                             variant="contained"
                                             color="primary"
-                                            onClick={() => handleTaskDelete(row.id, index)}
+                                            onClick={() => handleTaskDelete(row.pbi_id, index)}
                                         >
                                             Delete
                                         </Button> 
