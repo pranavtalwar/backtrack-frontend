@@ -12,13 +12,13 @@ const pbiList = {
   "project": 1,
   "pbis": [
     { "pbi_id": 6,
-      "tasks": [{"description":  "Create", "effort_hours": 10},
-           {"developer":  "2", "description":  "New", "effort_hours": 8}
+      "tasks": [{"description":  "Create", "effort_hours": 10, "status": "Completed"},
+           {"developer":  "2", "description":  "New", "effort_hours": 8, "status": "In progress"}
       ]
     },
     { "pbi_id":5,
-      "tasks": [{"description":  "Create", "effort_hours": 5},
-           {"developer":  "2", "description":  "New", "effort_hours": 6}
+      "tasks": [{"description":  "Create", "effort_hours": 5, "status": "Completed"},
+           {"developer":  "2", "description":  "New", "effort_hours": 6, "status": "In progress"}
       ]
     }
   ]
@@ -64,6 +64,9 @@ const useStyles = makeStyles(theme => ({
 export default () => {
   const classes = useStyles();
   const [pbiArray, setPbiArray] = useState([]);
+  const [burndown, setBurndown] = useState(0);
+  const [completed, setCompleted] = useState(0);
+
 
   // const [addPbis, setAddPbis] = useState([]);
   // const hello = ({
@@ -79,7 +82,8 @@ export default () => {
     .then(json => setPbiArray(json));
   }, []);
 
-  
+  let tmpBurndown = burndown;
+  let tmpCompleted = completed;
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -95,6 +99,7 @@ export default () => {
             <b>Start Date: </b> {pbiList.start_date} <br/>
             <b>End Date: </b> {pbiList.end_date} <br/>
           </div>
+
           { pbiList.pbis.length>0? (
               pbiList.pbis.map(row => (
                 <>
@@ -105,6 +110,7 @@ export default () => {
                 Tasks:
                 {
                   (row.tasks.length>0)? (
+                    <div>
                     <Paper className={classes.paper}>
                       <Table>
                         <TableBody>
@@ -114,7 +120,15 @@ export default () => {
                             <TableCell></TableCell>
                           </TableRow>
 
-                          {row.tasks.map(task => (
+                          {row.tasks.map(task => {
+                            
+                            
+                            tmpBurndown = tmpBurndown + task.effort_hours;
+                            if(task.status==="Completed"){
+                              tmpCompleted = tmpCompleted + task.effort_hours;
+                            }
+                            console.log("tmpBurndown " + tmpBurndown);
+                            return(
                             <TableRow>
                                 <TableCell>{task.description}</TableCell>
                                 <TableCell>{task.effort_hours}</TableCell>
@@ -127,10 +141,11 @@ export default () => {
                                 </Button> 
                               </TableCell>
                             </TableRow>
-                          ))}
+                          )})}
                       </TableBody>
                       </Table>
                     </Paper>
+                    </div>
                   ) : (
                     <>
                       <dig>
@@ -139,13 +154,23 @@ export default () => {
                     </>
                   )
                 }
+
+
               </>
-              ))): (
+              ))
+               
+
+              ): (
                 <div>
                   <b>There are no PBIs added to Current Sprint</b>
                 </div>
               )
           }
+          <br/>
+        <center>
+        <b>Sprint Burndown: </b>{tmpBurndown} <br/>
+        <b>Completed: </b>{tmpCompleted}
+        </center>
         </div> 
         <br/>
         <br/>
