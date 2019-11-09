@@ -70,14 +70,20 @@ export default () => {
     .then(json => setPbiArray(json));
   }, []);
 
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/currentsprint/1")
+    .then(response => console.log(response));
+  }, []);
+
   const handlePBIAdd = (e) => {
     e.preventDefault();
     if(currPBI !== null){
-      if(pbiTasks.some(pbiTask => pbiTask.id === currPBI.id)){
+      if(pbiTasks.some(pbiTask => pbiTask.pbi_id === currPBI.id)){
         alert("Please select a different PBI")
       } else {
         setPBITasks([...pbiTasks, {
           pbi_id: currPBI.id,
+          name: currPBI.name,
           tasks: []
         }]);
       }
@@ -90,7 +96,7 @@ export default () => {
 
   const handleTaskAdd = (e,id) => {
     e.preventDefault();
-    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.id === id));
+    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.pbi_id === id));
     const newPBITasks= [...pbiTasks];
     if(curTask.description !== null && curTask.effort_hours !== null) {
       newPBITasks[pbiIndex].tasks.push(curTask);
@@ -314,7 +320,7 @@ export default () => {
                       </Container>
                     )
                   }
-                  <form onSubmit={(e) => handleTaskAdd(e, row.id)}>
+                  <form onSubmit={(e) => handleTaskAdd(e, row.pbi_id)}>
                     <TextField 
                       multiline
                       label="Description"

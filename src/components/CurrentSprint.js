@@ -5,25 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Copyright from './Copyright';
 import AppBar from './AppBar/AppBar';
 
-const pbiList = {
-  "start_date": "2019-10-19",
-  "end_date": "2019-10-31",
-  "capacity": 80,
-  "project": 1,
-  "pbis": [
-    { "pbi_id": 6,
-      "tasks": [{"description":  "Create", "effort_hours": 10, "status": true},
-           {"developer":  "2", "description":  "New", "effort_hours": 8, "status": false}
-      ]
-    },
-    { "pbi_id":5,
-      "tasks": [{"description":  "Create", "effort_hours": 5, "status": true},
-           {"developer":  "2", "description":  "New", "effort_hours": 6, "status": false}
-      ]
-    }
-  ]
-}
-
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -63,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 
 export default () => {
   const classes = useStyles();
-  const [pbiArray, setPbiArray] = useState([]);
+  const [currentSprint, setCurrentSprint] = useState(null);
   const [burndown, setBurndown] = useState(0);
   const [completed, setCompleted] = useState(0);
 
@@ -74,12 +55,12 @@ export default () => {
   //   name: "Make",
   // });
 
-  const url = "http://127.0.0.1:8000/pbi/";
+  const url = "http://127.0.0.1:8000/currentsprint/1";
 
   useEffect(() => {
     fetch(url)
     .then(response => response.json())
-    .then(json => setPbiArray(json));
+    .then(json => setCurrentSprint(json.result));
   }, []);
 
 
@@ -87,7 +68,7 @@ export default () => {
   let tmpCompleted = completed;
   let pbiBurndown = 0;
   let pbiCompleted = 0;
-  const reset = () =>{
+  const reset = () => {
     pbiBurndown = 0;
     pbiCompleted = 0;
   }
@@ -101,14 +82,14 @@ export default () => {
         <br/>
           <div className={classes.pbitext}>
           <div>
-          <b> Project: </b>{pbiList.project}<br/>
-            <b>Capacity: </b>{pbiList.capacity}<br/>
-            <b>Start Date: </b> {pbiList.start_date} <br/>
-            <b>End Date: </b> {pbiList.end_date} <br/>
+            <b>Project: </b>{currentSprint.project}<br/>
+            <b>Capacity: </b>{currentSprint.capacity}<br/>
+            <b>Start Date: </b> {currentSprint.start_date} <br/>
+            <b>End Date: </b> {currentSprint.end_date} <br/>
           </div>
 
-          { pbiList.pbis.length>0? (
-              pbiList.pbis.map(row => (
+          { currentSprint.pbis.length>0? (
+              currentSprint.pbis.map(row => (
                 <>
                 { 
                   reset()
