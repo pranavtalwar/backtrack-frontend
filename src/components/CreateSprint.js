@@ -70,11 +70,6 @@ export default () => {
     .then(json => setPbiArray(json));
   }, []);
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/currentsprint/1")
-    .then(response => console.log(response));
-  }, []);
-
   const handlePBIAdd = (e) => {
     e.preventDefault();
     if(currPBI !== null){
@@ -120,7 +115,7 @@ export default () => {
   }
 
   const handleTaskDelete = (pbiId, index) => {
-    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.id === pbiId));
+    const pbiIndex = pbiTasks.findIndex((pbiTask => pbiTask.pbi_id === pbiId));
     const newPBITasks = [...pbiTasks];
     newPBITasks[pbiIndex].tasks.splice(index, 1);
     setPBITasks(newPBITasks);

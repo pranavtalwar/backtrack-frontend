@@ -44,23 +44,25 @@ const useStyles = makeStyles(theme => ({
 
 export default () => {
   const classes = useStyles();
-  const [currentSprint, setCurrentSprint] = useState(null);
+  const [currentSprint, setCurrentSprint] = useState(
+    {
+      start_date: null,
+      end_date: null,
+      capacity: null,
+      project: null,
+      pbis: null
+  });
   const [burndown, setBurndown] = useState(0);
   const [completed, setCompleted] = useState(0);
-
-
-  // const [addPbis, setAddPbis] = useState([]);
-  // const hello = ({
-  //   id: 12,
-  //   name: "Make",
-  // });
 
   const url = "http://127.0.0.1:8000/currentsprint/1";
 
   useEffect(() => {
     fetch(url)
     .then(response => response.json())
-    .then(json => setCurrentSprint(json.result));
+    .then(json => {setCurrentSprint(json);
+    return json})
+    .then(json => console.log(json))
   }, []);
 
 
@@ -88,7 +90,7 @@ export default () => {
             <b>End Date: </b> {currentSprint.end_date} <br/>
           </div>
 
-          { currentSprint.pbis.length>0? (
+          { (currentSprint.pbis && currentSprint.pbis.length>0) ? (
               currentSprint.pbis.map(row => (
                 <>
                 { 
