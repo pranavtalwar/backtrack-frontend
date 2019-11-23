@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CssBaseline, Table, TableBody, TableRow, TableCell, Paper, Button
+import { CssBaseline, Table, TableBody, TableRow, TableCell, Paper, Button,
+  InputLabel, MenuItem, Select,  TextField
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Copyright from './Copyright';
@@ -42,28 +43,103 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+
+
 export default () => {
-  const classes = useStyles();
-  const [currentSprint, setCurrentSprint] = useState(
-    {
+  const [pbiArray, setPbiArray] = useState([]);
+  const [currPBI, setCurrPBI] = useState(null);
+  const [curTask, setCurTask] = useState({
+    name: null,
+    description: null,
+    effort: null,
+  });
+  const [currentSprint, setCurrentSprint] = useState({
       start_date: null,
+      id: null,
       end_date: null,
       capacity: null,
       project: null,
       pbis: null
   });
-  const [burndown, setBurndown] = useState(0);
-  const [completed, setCompleted] = useState(0);
 
-  const url = "http://127.0.0.1:8000/currentsprint/1";
+  const sample = {
+    "id": 17,
+    "start_date": "2019-11-21",
+    "end_date": "2019-11-22",
+    "capacity": 90,
+    "project": 1,
+    "pbis": [
+        {
+            "pbi_name": 'chaman',
+            "pbi_id": 8,
+            "tasks": [
+                {
+                    "id": 30,
+                    "pbi": 8,
+                    "description": "abc",
+                    "name": "acnc",
+                    "developer": null,
+                    "effort_hours": 120,
+                    "status": "not yet started"
+                },
+                {
+                    "id": 31,
+                    "pbi": 8,
+                    "description": "abc10",
+                    "name": "acnc10",
+                    "developer": null,
+                    "effort_hours": 120,
+                    "status": "not yet started"
+                }
+            ]
+        },
+        {
+          "pbi_name": 'chaman',
+          "pbi_id": 8,
+          "tasks": [
+              {
+                  "id": 30,
+                  "pbi": 8,
+                  "description": "abc",
+                  "name": "acnc",
+                  "developer": null,
+                  "effort_hours": 120,
+                  "status": "not yet started"
+              },
+              {
+                  "id": 31,
+                  "pbi": 8,
+                  "description": "abc10",
+                  "name": "acnc10",
+                  "developer": null,
+                  "effort_hours": 120,
+                  "status": "not yet started"
+              }
+          ]
+      }
 
-  useEffect(() => {
-    fetch(url)
-    .then(response => response.json())
-    .then(json => {setCurrentSprint(json);
-    return json})
-    .then(json => console.log(json))
-  }, []);
+    ]
+};
+const classes = useStyles();
+  
+
+const [burndown, setBurndown] = useState(0);
+const [completed, setCompleted] = useState(0);
+
+const url = "http://127.0.0.1:8000/pbi/";
+const url2 = "http://127.0.0.1:8000/currentsprint/1";
+
+useEffect(() => {
+  // getting pbis for selection
+  fetch(url)
+  .then(response => response.json())
+  .then(json => setPbiArray(json));
+
+  // getting current sprint details
+  fetch(url2)
+  .then(response => response.json())
+  .then(json => setCurrentSprint(sample));
+}, []);
 
 
   let tmpBurndown = burndown;
@@ -82,24 +158,77 @@ export default () => {
         <div className={classes.appBarSpacer} />
         <br/>
         <br/>
-          <div className={classes.pbitext}>
-          <div>
-            <b>Project: </b>{currentSprint.project}<br/>
-            <b>Capacity: </b>{currentSprint.capacity}<br/>
-            <b>Start Date: </b> {currentSprint.start_date} <br/>
-            <b>End Date: </b> {currentSprint.end_date} <br/>
-          </div>
-
-          { (currentSprint.pbis && currentSprint.pbis.length>0) ? (
+        <div>
+          <b>Project: </b>{currentSprint.project}<br/>
+          <b>Capacity: </b>{currentSprint.capacity}<br/>
+          <b>Start Date: </b> {currentSprint.start_date} <br/>
+          <b>End Date: </b> {currentSprint.end_date} <br/>
+        </div>
+        <br/>
+        <br/>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            console.log(curTask);
+          }}
+        >
+          <InputLabel>Select PBI</InputLabel>
+          <Select
+              style={{ width: 300 }}
+              value={currPBI}
+              onChange={e => {
+                setCurrPBI(e.target.value);
+              }}
+          >
+          {
+              pbiArray.map(pbi => (
+                <MenuItem value={pbi}>{pbi.name}</MenuItem>
+              ))
+          }
+          {/* <MenuItem value={hello}>Make Soup</MenuItem> */}
+          </Select>
+          <br />
+          <br />
+          <TextField 
+            label="Task Name"
+            value={curTask.name}
+            onChange={e => setCurTask({ ...curTask, name: e.target.value })}
+          />
+          <br />
+          <br />
+          <TextField 
+            multiline
+            value={curTask.description}
+            label="Description"
+            onChange={e => setCurTask({ ...curTask, description: e.target.value })}
+          />
+          <br />
+          <br />
+          <TextField
+            type="number" 
+            value={curTask.effort}
+            label="Effort"
+            onChange={e => setCurTask({ ...curTask, effort: e.target.value })}
+          />
+          <br />
+          <br />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Create Task
+          </Button>
+        </form>
+        <div className={classes.pbitext}>
+          {(currentSprint.pbis && currentSprint.pbis.length>0) ? (
               currentSprint.pbis.map(row => (
                 <>
-                { 
-                  reset()
-                }
+                {/* {reset()} */}
                 <div className={classes.newtext}>
                 </div>
                 <br/>
-                PBI ID: {row.pbi_id} <br/>
+                PBI Name: {row.pbi_name} <br/>
                 Tasks:
                 {
                   (row.tasks.length>0)? (
@@ -108,6 +237,7 @@ export default () => {
                       <Table>
                         <TableBody>
                           <TableRow>
+                            <TableCell>Name</TableCell>
                             <TableCell>Description</TableCell>
                             <TableCell>Effort</TableCell>
                             <TableCell>Status</TableCell>
@@ -115,18 +245,19 @@ export default () => {
                           </TableRow>
 
                           {row.tasks.map(task => {
-                            pbiBurndown = pbiBurndown + task.effort_hours;
+                            {/* pbiBurndown = pbiBurndown + task.effort_hours;
                             tmpBurndown = tmpBurndown + task.effort_hours;
                             if(task.status===true){
                               tmpCompleted = tmpCompleted + task.effort_hours;
                               pbiCompleted = pbiCompleted + task.effort_hours;
                             }
-                            console.log("pbiBurndown " + pbiBurndown);
+                            console.log("pbiBurndown " + pbiBurndown); */}
                             return(
                             <TableRow>
+                                <TableCell>{task.name}</TableCell>
                                 <TableCell>{task.description}</TableCell>
                                 <TableCell>{task.effort_hours}</TableCell>
-                                <TableCell>{task.status? ("Completed"): ("In progress")}</TableCell>
+                                <TableCell>{task.status}</TableCell>
                                 <TableCell>
                                   <Button
                                     type="submit"
@@ -149,13 +280,12 @@ export default () => {
                     </>
                   )
                 }
-                <b>PBI Completed: </b> {pbiCompleted} <br/>
+                {/* <b>PBI Completed: </b> {pbiCompleted} <br/>
                 <b>PBI Burndown: </b> {pbiBurndown} <br/>
-                <b>Leftover: </b> {pbiBurndown-pbiCompleted}
+                <b>Leftover: </b> {pbiBurndown-pbiCompleted} */}
               </>
               ))
                
-
               ): (
                 <div>
                   <b>There are no PBIs added to Current Sprint</b>
@@ -163,17 +293,17 @@ export default () => {
               )
           }
           <br/>
-        <center>
+        {/* <center>
         <b>Sprint Completed: </b>{tmpCompleted} <br/>
         <b>Sprint Burndown: </b>{tmpBurndown} <br/>
         <b>Leftover: </b> {tmpBurndown-tmpCompleted}
-        </center>
+        </center> */}
         </div> 
         <br/>
         <br/>
         <br/>
         <Copyright />   
-      </div>
+      </div> 
       
     </div>
   );
