@@ -49,8 +49,8 @@ const PBITable = (props) => {
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.priority}</TableCell>
                 <TableCell>{row.story_points}</TableCell>
+                {row.sprint_id ? <TableCell>{row.sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
                 <TableCell>{row.status}</TableCell>
-                <TableCell>{row.sprint_id}</TableCell>
                 <TableCell>
                     <Button
                         type="submit"
