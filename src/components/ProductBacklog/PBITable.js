@@ -57,6 +57,7 @@ const PBITable = (props) => {
                         variant="contained"
                         color="primary"
                         onClick={() => deletePBI(row.id)}
+                        disabled={row.sprint_id && row.status!=="Incomplete" && true}
                     >
                         Delete
                     </Button> 
@@ -66,6 +67,7 @@ const PBITable = (props) => {
                         type="submit"
                         variant="contained"
                         color="primary"
+                        disabled={row.sprint_id && row.status!=="Incomplete" && true}
                         onClick={() => {
                             setUpdateObj(
                                 {
