@@ -51,7 +51,7 @@ export default () => {
   const [curTask, setCurTask] = useState({
     name: null,
     description: null,
-    effort: null,
+    effort_hours: null,
   });
   const [currentSprint, setCurrentSprint] = useState({
       start_date: null,
@@ -61,6 +61,7 @@ export default () => {
       project: null,
       pbis: null
   });
+  const [currentCapacity, setCurrentCapacity] = useState(0);
 
   const sample = {
     "id": 17,
@@ -128,6 +129,7 @@ const [completed, setCompleted] = useState(0);
 
 const url = "http://127.0.0.1:8000/pbi/";
 const url2 = "http://127.0.0.1:8000/currentsprint/1";
+const url3 = "http://127.0.0.1:8000/tasks/";
 
 useEffect(() => {
   // getting pbis for selection
@@ -138,8 +140,61 @@ useEffect(() => {
   // getting current sprint details
   fetch(url2)
   .then(response => response.json())
-  .then(json => setCurrentSprint(sample));
+  .then(json => setCurrentSprint(json.result));
 }, []);
+
+const handleTaskCreate = e => {
+  e.preventDefault();
+  const sprintPBIs = currentSprint.pbis;
+  let totalCapacity = 0;
+  for(let i = 0; i < sprintPBIs.length; i++) {
+    let pbiTasks = sprintPBIs[i].tasks;
+    for(let j = 0; j < pbiTasks.length; j++) {
+      totalCapacity += pbiTasks[j].effort_hours;
+    }
+  }
+  if(currPBI == null) {
+    alert('Please select a PBI');
+    return;
+  } else if(curTask.description == null) {
+    alert('Please add a task description');
+    return;
+  } else if (curTask.effort_hours == null) {
+    alert('Please add a task effort');
+    return;
+  } else if (curTask.name == null) {
+    alert('Please add a task name');
+    return;
+  } else if (parseInt(curTask.effort_hours) + totalCapacity > currentSprint.capacity) {
+    console.log(parseInt(curTask.effort_hours) + totalCapacity)
+    alert('The effort hours are exceeding the total capacity of the sprint');
+    return;
+  } else {
+    fetch(url3, {
+      method: 'POST',
+      body: JSON.stringify({
+          pbi_id: currPBI.id,
+          sprint_id: currentSprint.id,
+          ...curTask
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json)
+    .then(json => {
+      // if(json.status_code === 200) 
+        alert('Task Created');
+        return json;
+    })
+    .then(json => {
+      fetch(url2)
+      .then(response => response.json())
+      .then(json => setCurrentSprint(json.result));
+    });
+  }
+
+}
 
 
   let tmpBurndown = burndown;
@@ -158,7 +213,7 @@ useEffect(() => {
         <div className={classes.appBarSpacer} />
         <br/>
         <br/>
-        <div>
+        <div className={classes.pbitext}>
           <b>Project: </b>{currentSprint.project}<br/>
           <b>Capacity: </b>{currentSprint.capacity}<br/>
           <b>Start Date: </b> {currentSprint.start_date} <br/>
@@ -167,10 +222,7 @@ useEffect(() => {
         <br/>
         <br/>
         <form
-          onSubmit={e => {
-            e.preventDefault();
-            console.log(curTask);
-          }}
+          onSubmit={handleTaskCreate}
         >
           <InputLabel>Select PBI</InputLabel>
           <Select
@@ -178,6 +230,7 @@ useEffect(() => {
               value={currPBI}
               onChange={e => {
                 setCurrPBI(e.target.value);
+                console.log(currPBI)
               }}
           >
           {
@@ -206,9 +259,9 @@ useEffect(() => {
           <br />
           <TextField
             type="number" 
-            value={curTask.effort}
+            value={curTask.effort_hours}
             label="Effort"
-            onChange={e => setCurTask({ ...curTask, effort: e.target.value })}
+            onChange={e => setCurTask({ ...curTask, effort_hours: e.target.value })}
           />
           <br />
           <br />
