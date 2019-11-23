@@ -32,7 +32,6 @@ const PBITable = (props) => {
         <Table size="small">
             <TableHead>
             <TableRow>
-                <TableCell>ID</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Priority</TableCell>
@@ -43,14 +42,13 @@ const PBITable = (props) => {
             </TableHead>
             <TableBody>
             {pbis.map(row => (
-                <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>  
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.description}</TableCell>
-                <TableCell>{row.priority}</TableCell>
-                <TableCell>{row.story_points}</TableCell>
-                {row.sprint_id ? <TableCell>{row.sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
-                <TableCell>{row.status}</TableCell>
+                <TableRow key={row.id}> 
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.description}</TableCell>
+                    <TableCell>{row.priority}</TableCell>
+                    <TableCell>{row.story_points}</TableCell>
+                    {row.sprint_id ? <TableCell>{row.sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
+                    <TableCell>{row.status}</TableCell>
                 <TableCell>
                     <Button
                         type="submit"
