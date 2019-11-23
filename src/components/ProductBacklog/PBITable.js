@@ -37,6 +37,7 @@ const PBITable = (props) => {
                 <TableCell>Description</TableCell>
                 <TableCell>Priority</TableCell>
                 <TableCell>Story Point</TableCell>
+                <TableCell>Sprint ID</TableCell>
                 <TableCell>Status</TableCell>
             </TableRow>
             </TableHead>
@@ -49,6 +50,7 @@ const PBITable = (props) => {
                 <TableCell>{row.priority}</TableCell>
                 <TableCell>{row.story_points}</TableCell>
                 <TableCell>{row.status}</TableCell>
+                <TableCell>{row.sprint_id}</TableCell>
                 <TableCell>
                     <Button
                         type="submit"
