@@ -58,7 +58,6 @@ export default () => {
 
   const handleCreateSprint = e => {
     e.preventDefault();
-    let checker = false;
     if(startDate == null) {
       alert('Please enter a start date for the sprint');
       return;
@@ -91,10 +90,11 @@ export default () => {
     })
     .then(response => response.json)
     .then(json => {
-      alert('Sprint Created');
-      setStartDate(null);
-      setEndDate(null);
-      setCapacity(null);
+      // if(json.status_code === 200) 
+        alert('Sprint Created');
+        setStartDate(null);
+        setEndDate(null);
+        setCapacity(''); 
     });
   }
 
