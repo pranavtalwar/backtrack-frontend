@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CssBaseline, Table, TableBody, TableRow, TableCell, Paper, Button,
-  InputLabel, MenuItem, Select,  TextField
+  InputLabel, MenuItem, Select,  TextField, Dialog, DialogActions, DialogContent, 
+  DialogTitle
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Copyright from './Copyright';
@@ -49,9 +50,9 @@ export default () => {
   const [pbiArray, setPbiArray] = useState([]);
   const [currPBI, setCurrPBI] = useState(null);
   const [curTask, setCurTask] = useState({
-    name: null,
-    description: null,
-    effort_hours: null,
+    name: '',
+    description: '',
+    effort_hours: 0,
   });
   const [currentSprint, setCurrentSprint] = useState({
       start_date: null,
@@ -62,86 +63,41 @@ export default () => {
       pbis: null
   });
   const [currentCapacity, setCurrentCapacity] = useState(0);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [updateObj, setUpdateObj] = useState({
+      id: '',
+      name: '',
+      description: '',
+      effort_hours: 0,
+  });
 
-  const sample = {
-    "id": 17,
-    "start_date": "2019-11-21",
-    "end_date": "2019-11-22",
-    "capacity": 90,
-    "project": 1,
-    "pbis": [
-        {
-            "pbi_name": 'chaman',
-            "pbi_id": 8,
-            "tasks": [
-                {
-                    "id": 30,
-                    "pbi": 8,
-                    "description": "abc",
-                    "name": "acnc",
-                    "developer": null,
-                    "effort_hours": 120,
-                    "status": "not yet started"
-                },
-                {
-                    "id": 31,
-                    "pbi": 8,
-                    "description": "abc10",
-                    "name": "acnc10",
-                    "developer": null,
-                    "effort_hours": 120,
-                    "status": "not yet started"
-                }
-            ]
-        },
-        {
-          "pbi_name": 'chaman',
-          "pbi_id": 8,
-          "tasks": [
-              {
-                  "id": 30,
-                  "pbi": 8,
-                  "description": "abc",
-                  "name": "acnc",
-                  "developer": null,
-                  "effort_hours": 120,
-                  "status": "not yet started"
-              },
-              {
-                  "id": 31,
-                  "pbi": 8,
-                  "description": "abc10",
-                  "name": "acnc10",
-                  "developer": null,
-                  "effort_hours": 120,
-                  "status": "not yet started"
-              }
-          ]
-      }
-
-    ]
-};
-const classes = useStyles();
+  const handleClickOpen = () => {
+      setDialogOpen(true);
+  };
   
+  const handleClose = () => {
+      setDialogOpen(false);
+  };
 
-const [burndown, setBurndown] = useState(0);
-const [completed, setCompleted] = useState(0);
+  const classes = useStyles();
+  const [burndown, setBurndown] = useState(0);
+  const [completed, setCompleted] = useState(0);
 
-const url = "http://127.0.0.1:8000/pbi/";
-const url2 = "http://127.0.0.1:8000/currentsprint/1";
-const url3 = "http://127.0.0.1:8000/tasks/";
+  const url = "http://127.0.0.1:8000/pbi/";
+  const url2 = "http://127.0.0.1:8000/currentsprint/1";
+  const url3 = "http://127.0.0.1:8000/tasks/";
 
-useEffect(() => {
-  // getting pbis for selection
-  fetch(url)
-  .then(response => response.json())
-  .then(json => setPbiArray(json));
+  useEffect(() => {
+    // getting pbis for selection
+    fetch(url)
+    .then(response => response.json())
+    .then(json => setPbiArray(json));
 
-  // getting current sprint details
-  fetch(url2)
-  .then(response => response.json())
-  .then(json => setCurrentSprint(json.result));
-}, []);
+    // getting current sprint details
+    fetch(url2)
+    .then(response => response.json())
+    .then(json => setCurrentSprint(json.result));
+  }, []);
 
 const handleTaskCreate = e => {
   e.preventDefault();
@@ -156,13 +112,13 @@ const handleTaskCreate = e => {
   if(currPBI == null) {
     alert('Please select a PBI');
     return;
-  } else if(curTask.description == null) {
+  } else if(curTask.description === '') {
     alert('Please add a task description');
     return;
-  } else if (curTask.effort_hours == null) {
+  } else if (curTask.effort_hours === 0) {
     alert('Please add a task effort');
     return;
-  } else if (curTask.name == null) {
+  } else if (curTask.name === '') {
     alert('Please add a task name');
     return;
   } else if (parseInt(curTask.effort_hours) + totalCapacity > currentSprint.capacity) {
@@ -185,17 +141,117 @@ const handleTaskCreate = e => {
     .then(json => {
       // if(json.status_code === 200) 
         alert('Task Created');
+        setCurTask({
+          name: '',
+          description:'',
+          effort_hours: 0 
+      });
+        setCurrPBI(null);
         return json;
     })
     .then(json => {
       fetch(url2)
       .then(response => response.json())
-      .then(json => setCurrentSprint(json.result));
+      .then(json => {
+        console.log(json.result)
+        setCurrentSprint(json.result)});
     });
   }
-
 }
 
+
+const handleTaskDelete = id => {
+  fetch(url3 + id + '/', {
+    method: 'DELETE'
+  })
+  .then(response => response.json())
+  .then(json => {
+    if(json.status_code === 200) {
+      console.log('deleted');
+      fetch(url2)
+      .then(response => response.json())
+      .then(json => setCurrentSprint(json.result));
+    }
+  });
+}
+
+const handlePBIRemoval = id => {
+  fetch(url + id + '/', {
+    method: 'PATCH',
+    body: JSON.stringify({
+      status: "Not Yet Started",
+      sprint_id: null
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(json => {
+    if(json.status_code === 200) {
+      fetch(url2)
+      .then(response => response.json())
+      .then(json => setCurrentSprint(json.result));
+    }
+  });
+}
+
+const handleTaskCompletion = id => {
+  fetch(url3 + id + '/', {
+    method: 'PATCH',
+    body: JSON.stringify({
+      status: "Completed",
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(json => {
+    if(json.status_code === 200) {
+      fetch(url2)
+      .then(response => response.json())
+      .then(json => setCurrentSprint(json.result));
+    }
+  });
+}
+
+const handleTaskUpdate = (id, name, description, effort_hours) => {
+  const sprintPBIs = currentSprint.pbis;
+  let totalCapacity = 0;
+  for(let i = 0; i < sprintPBIs.length; i++) {
+    let pbiTasks = sprintPBIs[i].tasks;
+    for(let j = 0; j < pbiTasks.length; j++) {
+      if(pbiTasks[j].id !== id)
+      totalCapacity += pbiTasks[j].effort_hours;
+    }
+  }
+  if(parseInt(effort_hours) + totalCapacity > currentSprint.capacity) {
+    alert('The effort hours are exceeding the total capacity of the sprint');
+    return;
+  } else {
+    fetch(url3 + id + '/', {
+      method: 'PATCH',
+      body: JSON.stringify({
+        id,
+        name,
+        description,
+        effort_hours
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(json => {
+      if(json.status_code === 200) {
+        fetch(url2)
+        .then(response => response.json())
+        .then(json => setCurrentSprint(json.result));
+      }
+    });
+  }
+}
 
   let tmpBurndown = burndown;
   let tmpCompleted = completed;
@@ -281,7 +337,16 @@ const handleTaskCreate = e => {
                 <div className={classes.newtext}>
                 </div>
                 <br/>
-                PBI Name: {row.pbi_name} <br/>
+                PBI Name: {row.name} 
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handlePBIRemoval(row.pbi_id)}
+                >
+                  Delete
+                </Button> 
+                <br/>
                 Tasks:
                 {
                   (row.tasks.length>0)? (
@@ -315,8 +380,46 @@ const handleTaskCreate = e => {
                                   <Button
                                     type="submit"
                                     variant="contained"
-                                    color="primary">
+                                    color="primary"
+                                    onClick={() => handleTaskCompletion(task.id)}
+                                  >
                                     Complete
+                                </Button> 
+                              </TableCell>
+                              <TableCell>
+                                  <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => {
+                                      setUpdateObj({
+                                        name: task.name,
+                                        description: task.description,
+                                        effort_hours: task.effort_hours,
+                                        id: task.id
+                                      });
+                                      handleClickOpen();
+                                    }}
+                                  >
+                                  Update
+                                </Button> 
+                              </TableCell>
+                              <TableCell>
+                                  <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleTaskDelete(task.id)}
+                                  >
+                                  Delete
+                                </Button> 
+                              </TableCell>
+                              <TableCell>
+                                  <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary">
+                                    Ownership
                                 </Button> 
                               </TableCell>
                             </TableRow>
@@ -357,7 +460,55 @@ const handleTaskCreate = e => {
         <br/>
         <Copyright />   
       </div> 
-      
+      <Dialog open={dialogOpen} onClose={handleClose} maxWidth={"md"} fullWidth={true} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Update PBI</DialogTitle>
+            <DialogContent>
+            <TextField
+                value={updateObj.name}
+                onChange={e => setUpdateObj({ ...updateObj, name: e.target.value })}
+                autoFocus
+                margin="dense" 
+                fullWidth
+                label="Name"
+            />
+            <br />
+            <TextField 
+                value={updateObj.description}
+                onChange={e => setUpdateObj({ ...updateObj, description: e.target.value })}
+                autoFocus
+                margin="dense"
+                fullWidth
+                multiline
+                label="Description"
+            />
+            <br />
+            <TextField 
+                value={updateObj.effort_hours}
+                onChange={e => setUpdateObj({ ...updateObj, effort_hours: e.target.value })}
+                autoFocus
+                type="number"
+                margin="dense"
+                fullWidth
+                multiline
+                label="Effort Hours"
+            />
+            <br />
+            <br />
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleClose} color="primary">
+                Cancel
+            </Button>
+            <Button onClick={() => {
+                handleTaskUpdate(updateObj.id, updateObj.name, updateObj.description, updateObj.effort_hours);
+                handleClose();
+              }
+            } 
+            color="primary">
+                Update
+            </Button>
+            </DialogActions>
+         </Dialog>
     </div>
   );
 }
