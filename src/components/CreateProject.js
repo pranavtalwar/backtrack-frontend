@@ -53,9 +53,19 @@ export default () => {
   const [projName, setProjName] = useState('');
   const [currDeveloper, setCurrDeveloper] = useState('');
   const [currManager, setCurrManager] = useState('');
+  const [selectedDevelopers, setSelectedDevelopers] = useState([]);
   const developers = ["Rajat", "Pranav", "Marco", "Ritvik", "Rishabh"];
   const managers = ["Gabriel", "Christy"];
 
+  const addDeveloper = (name) => {
+    if(selectedDevelopers.includes(name)){
+      alert("Developer already added")
+    } else {
+      const array = selectedDevelopers;
+      array.push(name);
+      setSelectedDevelopers(array);
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -75,7 +85,7 @@ export default () => {
           />
           <br />
           <br />
-          <InputLabel>Select Developer</InputLabel>
+          <InputLabel>Select Developers</InputLabel>
           <Select
               style={{ width: 300 }}
               value={currDeveloper}
@@ -90,6 +100,28 @@ export default () => {
               ))
           }
           </Select>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick = { e => {
+              addDeveloper(currDeveloper); 
+              console.log(selectedDevelopers);
+              setCurrDeveloper('');
+              }}
+          >
+            Add
+          </Button>
+
+          <div>
+            <b>Developers Added:</b>
+            <br/>
+            {selectedDevelopers.map(developername => (
+              <div>
+                {developername}<br/>
+              </div>
+              ))
+            }
+          </div>
           <br/>
           <br/>
           <InputLabel>Select Manager</InputLabel>
