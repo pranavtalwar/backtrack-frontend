@@ -5,6 +5,7 @@ import Homepage from './components/Homepage';
 import ProductBacklog from './components/ProductBacklog/ProductBacklog';
 import CreateSprint from './components/CreateSprint';
 import CurrentSprint from './components/CurrentSprint';
+import CreateProject from './components/CreateProject';
 
 import './App.css';
 
@@ -18,6 +19,7 @@ function App() {
             <Route path="/backlog" component={ProductBacklog}/>
             <Route path="/createsprint" component={CreateSprint} />
             <Route path="/currentsprint" component={CurrentSprint} />
+            <Route path="/createproject" component={CreateProject} />
           </Switch>
       </div>
     </BrowserRouter>

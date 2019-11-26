@@ -4,6 +4,7 @@ import { Paper, Grid, Container, Typography, CssBaseline} from '@material-ui/cor
 import {Button, Card} from '@material-ui/core';
 import AppBar from './AppBar/AppBar';
 import Copyright from './Copyright';
+import { NavLink } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -53,6 +54,13 @@ export default () => {
                 <Typography color="inherit" variant="h4" className={classes.header} >
                     You don't seem to be working on any project.
                 </Typography>
+                  <NavLink 
+                      to='/createproject' 
+                      style={{ textDecoration: 'none', color: 'black' }} 
+                      activeStyle={{
+                        fontWeight: "bold",
+                        color: "blue"
+                  }}>
                   <Button
                       variant="contained"
                       color="primary"
@@ -60,6 +68,7 @@ export default () => {
                     >
                       Create new project
                   </Button>
+                  </NavLink>
                </Card>
               </Paper>
             </Grid>
