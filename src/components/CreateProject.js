@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, CssBaseline, Table, TableBody, TableRow, TableCell,
-        InputLabel, TextField, MenuItem, Select, Container, Grid, Paper
-} from '@material-ui/core';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
-  } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import { Button, CssBaseline, InputLabel, TextField, MenuItem, Select } from '@material-ui/core';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Copyright from './Copyright';
 import AppBar from './AppBar/AppBar';
@@ -48,14 +42,31 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default () => {
+const CreateProject = (props) => {
   const classes = useStyles();
+  const { id } = props;
   const [projName, setProjName] = useState('');
   const [currDeveloper, setCurrDeveloper] = useState('');
   const [currManager, setCurrManager] = useState('');
+  const [developers, setDevelopers] = useState([]);
+  const [managers, setManagers] = useState([]);
   const [selectedDevelopers, setSelectedDevelopers] = useState([]);
-  const developers = ["Rajat", "Pranav", "Marco", "Ritvik", "Rishabh"];
-  const managers = ["Gabriel", "Christy"];
+  // const developers = ["Rajat", "Pranav", "Marco", "Ritvik", "Rishabh"];
+  // const managers = ["Gabriel", "Christy"];
+  const url = "http://localhost:8000/";
+  console.log('id', id)
+  useEffect(() => {
+    fetch(url + 'developers/')
+    .then(response => response.json())
+    .then(json => {
+      const newJSON = json.filter((dev) => dev.id !== id);
+      return newJSON;
+    })
+    .then(newJSON => {
+      setDevelopers(newJSON);
+      console.log(developers)
+    })
+  }, [developers, id]);
 
   const addDeveloper = (name) => {
     if(selectedDevelopers.includes(name)){
@@ -155,3 +166,9 @@ export default () => {
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  id: state.id
+})
+
+export default connect(mapStateToProps)(CreateProject);

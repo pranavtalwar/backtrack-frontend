@@ -56,7 +56,8 @@ const SignIn = (props)  => {
         dispatch({ type: "SET", value: {
           isDeveloper: json.user_info.is_developer,
           isManager: json.user_info.is_manager,
-          projectID: json.user_info.project_id
+          projectID: json.user_info.project_id,
+          id: json.user
         }});
         history.push('/homepage');
       } else {

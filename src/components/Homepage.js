@@ -30,16 +30,16 @@ const useStyles = makeStyles(theme => ({
     height: '100hv',
   },
   card: {
-    height: '50vh',
+    height: '100vh',
   },
   header:{
     padding: theme.spacing(8),
 },
 }));
 
-const Homepage = () => {
+const Homepage = (props) => {
   const classes = useStyles();
-
+  const { projectID } = props;
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -50,10 +50,18 @@ const Homepage = () => {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-              <Card className={classes.card}>
-                <Typography color="inherit" variant="h4" className={classes.header} >
+              {
+                projectID !== -1 ? 
+                <Card className={classes.card}>
+                  <Typography color="inherit" variant="h4" className={classes.header} >
+                    You are already working on a project
+                  </Typography> 
+                </Card>
+                :
+                <Card className={classes.card}>
+                  <Typography color="inherit" variant="h4" className={classes.header} >
                     You don't seem to be working on any project.
-                </Typography>
+                  </Typography>
                   <NavLink 
                       to='/createproject' 
                       style={{ textDecoration: 'none', color: 'black' }} 
@@ -69,7 +77,8 @@ const Homepage = () => {
                       Create new project
                   </Button>
                   </NavLink>
-               </Card>
+                </Card>
+              }
               </Paper>
             </Grid>
           </Grid>
@@ -80,9 +89,10 @@ const Homepage = () => {
   );
 }
 
-const mapStateToProps = (state) => ({
-  isDeveloper: state.developer,
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
   projectID: state.projectID
-})
+}}
 
 export default connect(mapStateToProps)(Homepage);
