@@ -1,10 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Grid, Container, Typography, CssBaseline} from '@material-ui/core';
-import {Button, Card} from '@material-ui/core';
+import { Paper, Grid, Container, Typography, CssBaseline, Button, Card } from '@material-ui/core';
+import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 import AppBar from './AppBar/AppBar';
 import Copyright from './Copyright';
-import { NavLink } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 },
 }));
 
-export default () => {
+const Homepage = () => {
   const classes = useStyles();
 
   return (
@@ -79,3 +79,10 @@ export default () => {
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  isDeveloper: state.developer,
+  projectID: state.projectID
+})
+
+export default connect(mapStateToProps)(Homepage);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Avatar, Button, CssBaseline, Container, TextField, Box, Typography } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import Copyright from './Copyright';
 
 const useStyles = makeStyles(theme => ({
@@ -31,27 +32,39 @@ const useStyles = makeStyles(theme => ({
 
 const SignIn = (props)  => {
   const classes = useStyles();
-  const [userName, setUserName] = useState('');
+  const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(null);
-  const { history } = props;
-
-  const checkCredentials = () => {
-    if(userName === 'teamKay' && password === '12') {
-      return true;
-    }
-    return false;
-  }
-
+  const { history, dispatch } = props;
   const handleSubmit = e => {
     e.preventDefault();
-    if(checkCredentials()) {
-      console.log('cred correct')
-      history.push('/homepage');
-    } else {
-      setLoginError(true);
-      console.log(loginError);
-    }
+    fetch("http://127.0.0.1:8000/rest-auth/login/", {
+      method: "post",
+      headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username, password 
+      })
+    })
+    .then(response => response.json())
+    .then(json => {
+      console.log('json',json)
+      if(json['key'] !== undefined) {
+        localStorage.setItem('auth_token', json['key']);
+        dispatch({ type: "SET", value: {
+          isDeveloper: json.user_info.is_developer,
+          isManager: json.user_info.is_manager,
+          projectID: json.user_info.project_id
+        }});
+        history.push('/homepage');
+      } else {
+        setLoginError(true);
+        console.log(loginError);
+      }
+    });
+    
   }
 
   return (
@@ -112,4 +125,4 @@ const SignIn = (props)  => {
   );
 }
 
-export default SignIn;
+export default connect((state) => ({}))(SignIn);
