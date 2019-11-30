@@ -46,15 +46,23 @@ const CreateProject = (props) => {
   const classes = useStyles();
   const { id } = props;
   const [projName, setProjName] = useState('');
-  const [currDeveloper, setCurrDeveloper] = useState('');
-  const [currManager, setCurrManager] = useState('');
+  const [currDeveloper, setCurrDeveloper] = useState({
+    id: null,
+    user: null,
+    name: null,
+    project: null,
+    role: null
+  });
+  const [currManager, setCurrManager] = useState({
+    id: null,
+    user: null,
+    name: null,
+  });
   const [developers, setDevelopers] = useState([]);
   const [managers, setManagers] = useState([]);
   const [selectedDevelopers, setSelectedDevelopers] = useState([]);
-  // const developers = ["Rajat", "Pranav", "Marco", "Ritvik", "Rishabh"];
-  // const managers = ["Gabriel", "Christy"];
   const url = "http://localhost:8000/";
-  console.log('id', id)
+
   useEffect(() => {
     fetch(url + 'developers/')
     .then(response => response.json())
@@ -64,17 +72,80 @@ const CreateProject = (props) => {
     })
     .then(newJSON => {
       setDevelopers(newJSON);
-      console.log(developers)
     })
-  }, [developers, id]);
+    fetch(url + 'managers/')
+    .then(response => response.json())
+    .then(json => setManagers(json));
+  }, [id]);
 
-  const addDeveloper = (name) => {
-    if(selectedDevelopers.includes(name)){
+  console.log(developers)
+
+
+  const addDeveloper = (dev) => {
+    let found = false;
+    for (let i =0; i< selectedDevelopers.length; i++) {
+      if(selectedDevelopers[i].id === dev.id) {
+        found = true;
+      }
+    }
+    if(found) {
       alert("Developer already added")
     } else {
       const array = selectedDevelopers;
-      array.push(name);
+      array.push(dev);
       setSelectedDevelopers(array);
+      console.log('selected',selectedDevelopers);
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(projName === '') {
+      alert('Please enter a project name');
+      return;
+    } 
+    else if (selectedDevelopers.length === 0) {
+      alert('Please select some developers');
+      return;
+    }
+    else if (currManager.id === null || currManager.name === null || currManager.user === null) {
+      alert('Please select a manager');
+      return;
+    }
+    else {
+      const developersIDs = [];
+      for(let i = 0; i < selectedDevelopers.length; i++) {
+        developersIDs.push(selectedDevelopers[i].id);
+      }
+      fetch(url + 'project/', {
+        method: 'POST',
+        body: JSON.stringify({
+          manager: currManager.id,
+          name: projName,
+          developers: developersIDs
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(json => {
+        if(json.status_code === 201) {
+          alert('Project created');
+          setProjName('');
+          setCurrDeveloper({
+            id: null,
+            user: null,
+            name: null,
+            project: null,
+            role: null
+          });
+          setCurrManager({id: null,
+            user: null,
+            name: null
+          });
+        }
+      })
     }
   }
 
@@ -84,7 +155,9 @@ const CreateProject = (props) => {
       <AppBar heading = 'Create Sprint'/>
       <div className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <form>
+        <form
+          onSubmit={handleSubmit}
+        >
           <br />
           <br />
           <br />
@@ -107,7 +180,7 @@ const CreateProject = (props) => {
           >
           {
               developers.map(developer => (
-                <MenuItem value={developer}>{developer}</MenuItem>
+                <MenuItem value={developer}>{developer.name}</MenuItem>
               ))
           }
           </Select>
@@ -122,13 +195,12 @@ const CreateProject = (props) => {
           >
             Add
           </Button>
-
           <div>
             <b>Developers Added:</b>
             <br/>
-            {selectedDevelopers.map(developername => (
+            {selectedDevelopers.map(developer => (
               <div>
-                {developername}<br/>
+                {developer.name}<br/>
               </div>
               ))
             }
@@ -146,7 +218,7 @@ const CreateProject = (props) => {
           >
           {
               managers.map(manager => (
-                <MenuItem value={manager}>{manager}</MenuItem>
+                <MenuItem value={manager}>{manager.name}</MenuItem>
               ))
           }
           </Select>
