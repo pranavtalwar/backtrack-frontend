@@ -33,6 +33,12 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
+  paper2: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    // flexDirection: 'column',
+  },
   fixedHeight: {
     height: 240,
   },
@@ -42,6 +48,12 @@ const useStyles = makeStyles(theme => ({
   pbitext: {
     fontSize: 18,
   },
+  pad: {
+    paddingRight: 200,
+  },
+  pad2: {
+    paddingRight: 240,
+  }
 }));
 
 
@@ -333,7 +345,7 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
           {(currentSprint.pbis && currentSprint.pbis.length>0) ? (
               currentSprint.pbis.map(row => (
                 <>
-                {/* {reset()} */}
+                {reset()}
                 <div className={classes.newtext}>
                 </div>
                 <br/>
@@ -363,13 +375,13 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
                           </TableRow>
 
                           {row.tasks.map(task => {
-                            {/* pbiBurndown = pbiBurndown + task.effort_hours;
+                            pbiBurndown = pbiBurndown + task.effort_hours;
                             tmpBurndown = tmpBurndown + task.effort_hours;
-                            if(task.status===true){
+                            if(task.status==="Completed"){
                               tmpCompleted = tmpCompleted + task.effort_hours;
                               pbiCompleted = pbiCompleted + task.effort_hours;
                             }
-                            console.log("pbiBurndown " + pbiBurndown); */}
+                            console.log("pbiBurndown " + pbiBurndown);
                             return(
                             <TableRow>
                                 <TableCell>{task.name}</TableCell>
@@ -436,9 +448,15 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
                     </>
                   )
                 }
-                {/* <b>PBI Completed: </b> {pbiCompleted} <br/>
-                <b>PBI Burndown: </b> {pbiBurndown} <br/>
-                <b>Leftover: </b> {pbiBurndown-pbiCompleted} */}
+                <Paper className={classes.paper2}>
+                  <div className = {classes.pad}>
+                    <b>PBI Completed: </b> {pbiCompleted} 
+                  </div>
+                  <div className = {classes.pad}>
+                    <b>PBI Burndown: </b> {pbiBurndown} 
+                  </div>
+                  <b>Leftover: </b> {pbiBurndown-pbiCompleted}
+                </Paper>
               </>
               ))
                
@@ -449,11 +467,19 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
               )
           }
           <br/>
-        {/* <center>
-        <b>Sprint Completed: </b>{tmpCompleted} <br/>
-        <b>Sprint Burndown: </b>{tmpBurndown} <br/>
-        <b>Leftover: </b> {tmpBurndown-tmpCompleted}
-        </center> */}
+        <center>
+        <h2><b>Sprint:</b></h2>
+        <Paper className={classes.paper2}>
+          <div className = {classes.pad2}>
+            <b>Completed: </b>{tmpCompleted} 
+          </div>
+          <div className = {classes.pad2}>
+            <b>Burndown: </b>{tmpBurndown} 
+          </div>
+            <b>Leftover:  </b> {tmpBurndown-tmpCompleted}
+          <br/>
+        </Paper>
+        </center>
         </div> 
         <br/>
         <br/>
