@@ -8,6 +8,7 @@ import CurrentSprint from './components/CurrentSprint';
 import CreateProject from './components/CreateProject';
 
 import './App.css';
+import ManagerView from './components/ManagerView';
 
 const App = (props) => {
   console.log(props)
@@ -21,6 +22,7 @@ const App = (props) => {
             <Route path="/createsprint" component={CreateSprint} />
             <Route path="/currentsprint" component={CurrentSprint} />
             <Route path="/createproject" component={CreateProject} />
+            <Route path="/managerview" component={ManagerView} />
           </Switch>
       </div>
     </BrowserRouter>
