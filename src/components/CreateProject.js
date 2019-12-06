@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 
 const CreateProject = (props) => {
   const classes = useStyles();
-  const { id } = props;
+  const { id, history, dispatch } = props;
   const [projName, setProjName] = useState('');
   const [currDeveloper, setCurrDeveloper] = useState({
     id: null,
@@ -115,14 +115,22 @@ const CreateProject = (props) => {
     else {
       const developersIDs = [];
       for(let i = 0; i < selectedDevelopers.length; i++) {
-        developersIDs.push(selectedDevelopers[i].id);
+        developersIDs.push(selectedDevelopers[i].id.toString());
       }
+      console.log(developersIDs);
+      console.log(JSON.stringify({
+        manager: currManager.id,
+        name: projName,
+        developers: developersIDs,
+        owner: id
+      }));
       fetch(url + 'project/', {
         method: 'POST',
         body: JSON.stringify({
           manager: currManager.id,
           name: projName,
-          developers: developersIDs
+          developers: developersIDs,
+          owner: id
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -130,7 +138,10 @@ const CreateProject = (props) => {
       })
       .then(response => response.json())
       .then(json => {
-        if(json.status_code === 201) {
+        if(json.status_code === 406) {
+          alert('Developer cant create a project since he/she is already part of a project');
+        }
+        else if(json.status_code === 201) {
           alert('Project created');
           setProjName('');
           setCurrDeveloper({
@@ -144,6 +155,10 @@ const CreateProject = (props) => {
             user: null,
             name: null
           });
+          dispatch({ type: "SETPROJECT", value: {
+            projectID: json.result.projectID
+          }});
+          history.push('/homepage');
         }
       })
     }

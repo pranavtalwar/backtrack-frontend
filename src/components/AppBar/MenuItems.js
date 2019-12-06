@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 const MenuItems = (props) => {
-  const { isManager } = props;
+  const { isManager, projectID } = props;
   return (
     <div>
   {
@@ -60,7 +60,7 @@ const MenuItems = (props) => {
           <ListItemText primary="Dashboard" />
         </ListItem>
       </NavLink>
-      <NavLink 
+      {projectID && <NavLink 
         to='/currentsprint' 
         style={{ textDecoration: 'none', color: 'black' }} 
         activeStyle={{
@@ -73,8 +73,8 @@ const MenuItems = (props) => {
           </ListItemIcon>
           <ListItemText primary="Current Sprint" />
         </ListItem>
-      </NavLink>
-      <NavLink 
+      </NavLink>}
+      {projectID && <NavLink 
         to='/createsprint' 
         style={{ textDecoration: 'none', color: 'black' }} 
         activeStyle={{
@@ -87,8 +87,8 @@ const MenuItems = (props) => {
         </ListItemIcon>
         <ListItemText primary="Create Sprint" />
       </ListItem>
-      </NavLink>
-      <NavLink 
+      </NavLink>}
+      {projectID && <NavLink 
         to='/backlog' 
         style={{ textDecoration: 'none', color: 'black' }} 
         activeStyle={{
@@ -101,7 +101,7 @@ const MenuItems = (props) => {
           </ListItemIcon>
           <ListItemText primary="Backlog" />
         </ListItem>
-      </NavLink>
+      </NavLink>}
     </div>
     )}
   </div>
@@ -113,6 +113,7 @@ const MenuItems = (props) => {
     return {
     isManager: state.isManager,
     id: state.id,
+    projectID: state.projectID
   }}
   
   export default connect(mapStateToProps)(MenuItems);

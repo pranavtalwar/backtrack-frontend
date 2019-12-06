@@ -22,6 +22,12 @@ const rootReducer = (state = initState, action) => {
                 projectID: null,
                 id: null
             };
+        
+        case "SETPROJECT":
+            return {
+                projectID: action.value.projectID
+            }
+            
         default: 
             return state;
     }

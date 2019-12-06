@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 
 const App = (props) => {
   console.log(props)
-  const { isManager } = props;
+  const { isManager, projectID } = props;
   return (
     <BrowserRouter>
       <div className="App">
@@ -28,9 +28,9 @@ const App = (props) => {
             <Switch>
               <Route path="/" exact component={Signin}/>
               <Route path="/homepage" component={Homepage}/>
-              <Route path="/backlog" component={ProductBacklog}/>
-              <Route path="/createsprint" component={CreateSprint} />
-              <Route path="/currentsprint" component={CurrentSprint} />
+              {projectID && <Route path="/backlog" component={ProductBacklog}/>}
+              {projectID && <Route path="/createsprint" component={CreateSprint} />}
+              {projectID && <Route path="/currentsprint" component={CurrentSprint} />}
               <Route path="/createproject" component={CreateProject} />
             </Switch>
           )
@@ -45,6 +45,7 @@ const mapStateToProps = (state) => {
   return {
   isManager: state.isManager,
   id: state.id,
+  projectID: state.projectID
 }}
 
 export default connect(mapStateToProps)(App);

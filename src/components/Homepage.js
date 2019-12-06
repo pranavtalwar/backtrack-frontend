@@ -68,7 +68,7 @@ const Homepage = (props) => {
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                 {
-                  projectID !== -1 ? 
+                  projectID !== null ? 
                   <Card className={classes.card}>
                     <Typography color="inherit" variant="h4" className={classes.header} >
                       You are already working on a project
