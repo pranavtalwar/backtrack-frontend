@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import PBITable from './PBITable';
 import Copyright from '../Copyright';
 import AppBar from '../AppBar/AppBar';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,7 +39,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default () => {
+const ProductBacklog = (props) => {
   const classes = useStyles();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -46,6 +47,7 @@ export default () => {
   const [priority, setPriority] = useState(0);
   const [pbiArray, setPbiArray] = useState([]);
   const [priorityList, setPriorityList]= useState([1]);
+  const {project_id} = props;
   const storyPointList = [10,20,30,40,50,60,70,80,90,100];
   const url = "http://127.0.0.1:8000/pbi/";
 
@@ -87,7 +89,7 @@ export default () => {
       fetch(url, {
         method: 'POST',
         body: JSON.stringify({
-          name, description, story_points: storyPoint, priority
+          name, description, story_points: storyPoint, priority, project_id
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -242,7 +244,7 @@ export default () => {
                 <MenuItem value={priorityItem}>{priorityItem}</MenuItem>
               ))
             }
-          </Select> 
+          </Select>
           <br />
           <br />
           <InputLabel>Story Point</InputLabel>
@@ -286,3 +288,11 @@ export default () => {
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+  project_id: state.projectID
+}}
+
+export default connect(mapStateToProps)(ProductBacklog);

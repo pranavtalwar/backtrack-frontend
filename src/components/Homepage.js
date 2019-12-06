@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 
 const Homepage = (props) => {
   const classes = useStyles();
-  const { projectID } = props;
+  const { projectID, isManager } = props;
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -47,41 +47,59 @@ const Homepage = (props) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
+        { (isManager)? (
           <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-              {
-                projectID !== -1 ? 
-                <Card className={classes.card}>
-                  <Typography color="inherit" variant="h4" className={classes.header} >
-                    You are already working on a project
-                  </Typography> 
-                </Card>
-                :
-                <Card className={classes.card}>
-                  <Typography color="inherit" variant="h4" className={classes.header} >
-                    You don't seem to be working on any project.
-                  </Typography>
-                  <NavLink 
-                      to='/createproject' 
-                      style={{ textDecoration: 'none', color: 'black' }} 
-                      activeStyle={{
-                        fontWeight: "bold",
-                        color: "blue"
-                  }}>
-                  <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                    >
-                      Create new project
-                  </Button>
-                  </NavLink>
-                </Card>
-              }
-              </Paper>
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <Card className={classes.card}>
+                    <Typography color="inherit" variant="h4" className={classes.header} >
+                      You are a project manager
+                    </Typography>
+                    <Typography color="inherit" variant="h6" className={classes.header} >
+                      Go to 'My Projects' tab to view details
+                    </Typography>
+                  </Card>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
+
+          ):
+          (  <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                {
+                  projectID !== -1 ? 
+                  <Card className={classes.card}>
+                    <Typography color="inherit" variant="h4" className={classes.header} >
+                      You are already working on a project
+                    </Typography> 
+                  </Card>
+                  :
+                  <Card className={classes.card}>
+                    <Typography color="inherit" variant="h4" className={classes.header} >
+                      You don't seem to be working on any project.
+                    </Typography>
+                    <NavLink 
+                        to='/createproject' 
+                        style={{ textDecoration: 'none', color: 'black' }} 
+                        activeStyle={{
+                          fontWeight: "bold",
+                          color: "blue"
+                    }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                      >
+                        Create new project
+                    </Button>
+                    </NavLink>
+                  </Card>
+                }
+                </Paper>
+              </Grid>
+            </Grid>
+            )}
         </Container>
         <Copyright />
       </main>
@@ -92,7 +110,8 @@ const Homepage = (props) => {
 const mapStateToProps = (state) => {
   console.log(state);
   return {
-  projectID: state.projectID
+  projectID: state.projectID,
+  isManager: state.isManager
 }}
 
 export default connect(mapStateToProps)(Homepage);

@@ -74,7 +74,6 @@ export default () => {
       project: null,
       pbis: null
   });
-  const [currentCapacity, setCurrentCapacity] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [updateObj, setUpdateObj] = useState({
       id: '',
@@ -92,8 +91,6 @@ export default () => {
   };
 
   const classes = useStyles();
-  const [burndown, setBurndown] = useState(0);
-  const [completed, setCompleted] = useState(0);
 
   const url = "http://127.0.0.1:8000/pbi/";
   const url2 = "http://127.0.0.1:8000/currentsprint/1";
@@ -265,8 +262,8 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
   }
 }
 
-  let tmpBurndown = burndown;
-  let tmpCompleted = completed;
+  let tmpBurndown = 0;
+  let tmpCompleted = 0;
   let pbiBurndown = 0;
   let pbiCompleted = 0;
   const reset = () => {

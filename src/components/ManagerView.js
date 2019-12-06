@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CssBaseline, Table, TableBody, TableHead, TableRow, TableCell, Paper, Button,
-  InputLabel, MenuItem, Select,  TextField, Dialog, DialogActions, DialogContent, 
-  DialogTitle
+import { CssBaseline, Table, TableBody, TableHead, TableRow, TableCell, InputLabel, MenuItem, Select, 
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Copyright from './Copyright';
@@ -13,6 +11,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -91,78 +90,44 @@ children: PropTypes.node,
 index: PropTypes.any.isRequired,
 value: PropTypes.any.isRequired,
 };
-export default () => {
-const [value, setValue] = React.useState(0);
-
-const handleChange = (event, newValue) => {
-    setValue(newValue);
-};
-//   const [pbiArray, setPbiArray] = useState([]);
-//   const [currPBI, setCurrPBI] = useState(null);
-//   const [curTask, setCurTask] = useState({
-//     name: '',
-//     description: '',
-//     effort_hours: 0,
-//   });
-//   const [currentSprint, setCurrentSprint] = useState({
-//       start_date: null,
-//       id: null,
-//       end_date: null,
-//       capacity: null,
-//       project: null,
-//       pbis: null
-//   });
-//   const [currentCapacity, setCurrentCapacity] = useState(0);
-//   const [dialogOpen, setDialogOpen] = useState(false);
-//   const [updateObj, setUpdateObj] = useState({
-//       id: '',
-//       name: '',
-//       description: '',
-//       effort_hours: 0,
-//   });
-
-//   const handleClickOpen = () => {
-//       setDialogOpen(true);
-//   };
-  
-//   const handleClose = () => {
-//       setDialogOpen(false);
-//   };
-
+const ManagerView = (props) => {
+  const [value, setValue] = React.useState(0);
+  const url = "http://localhost:8000/";
+  const handleChange = (event, newValue) => {
+      setValue(newValue);
+  };
+  const { id } = props;
   const classes = useStyles();
-  const projArray = ["First Project","Second Project","Third Project","Fourth Project"];
-  const pbis =  [
-      { 
-        "pbi_id": 6,
-        "name": "FirstPBI",
-        "description": "This is the first one",
-        "priority": 2,
-        "story_points": 30,
-        "sprint_id": 1,
-        "status": "Not Yet Started"
-      },
-      { 
-        "pbi_id": 7,
-        "name": "SecondPBI",
-        "description": "This is the second one",
-        "priority": 1,
-        "story_points": 50,
-        "sprint_id": 1,
-        "status": "In Progress"
-      },
-      { 
-        "pbi_id": 8,
-        "name": "thirdPBI",
-        "description": "This is the third one",
-        "priority": 3,
-        "story_points": 50,
-        "sprint_id": 1,
-        "status": "Completed"
-      }
+  const [projArray, setProjArray] = useState([]);
+  const [pbis, setPbis] = useState([]);
 
-    ];
+  
+    const fetchPbis = (projId) => {
+      fetch(url + 'pbis_in_project/?id=' + projId)
+      .then(response => response.json())
+      .then(json => {
+        setPbis(json.result);
+        console.log(pbis)
+      })
+    }
 
   const [currProj, setCurrProj] = useState('');
+
+  useEffect(() => {
+    fetch(url + 'manager_projects/?id=1')
+    .then(response => response.json())
+    .then(json =>{
+      const newJSON = json.result;
+      newJSON.map(proj =>{
+        proj.name = proj.project_name;
+        return proj;
+      })
+      return newJSON;
+    })
+    .then(newJSON => {
+      setProjArray(newJSON);
+    })
+  }, []);
   
   return (
     <div className={classes.root}>
@@ -183,12 +148,13 @@ const handleChange = (event, newValue) => {
               value={currProj}
               onChange={e => {
                 setCurrProj(e.target.value);
+                fetchPbis(e.target.value.project_id);
                 console.log(currProj)
               }}
           >
           {
               projArray.map(proj => (
-                <MenuItem value={proj}>{proj}</MenuItem>
+                <MenuItem value={proj}>{proj.name}</MenuItem>
               ))
           }
           </Select>
@@ -219,14 +185,14 @@ const handleChange = (event, newValue) => {
             </TableHead>
             <TableBody>
             {pbis.map(row => ( 
-                (row.status==="Not Yet Started" || row.status==="In Progress")?(
-                <TableRow key={row.id}> 
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.priority}</TableCell>
-                    <TableCell>{row.story_points}</TableCell>
-                    {row.sprint_id ? <TableCell>{row.sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
-                    <TableCell>{row.status}</TableCell>
+                (row.pbi_status==="Not Yet Started" || row.pbi_status==="ONGOING")?(
+                <TableRow key={row.pbi_id}> 
+                    <TableCell>{row.pbi_name}</TableCell>
+                    <TableCell>{row.pbi_description}</TableCell>
+                    <TableCell>{row.pbi_priority}</TableCell>
+                    <TableCell>{row.pbi_story_points}</TableCell>
+                    {row.pbi_sprint_id ? <TableCell>{row.pbi_sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
+                    <TableCell>{row.pbi_status}</TableCell>
                     </TableRow>
             ):(
                 <>
@@ -250,14 +216,14 @@ const handleChange = (event, newValue) => {
             </TableHead>
             <TableBody>
             {pbis.map(row => ( 
-                <TableRow key={row.id}> 
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.priority}</TableCell>
-                    <TableCell>{row.story_points}</TableCell>
-                    {row.sprint_id ? <TableCell>{row.sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
-                    <TableCell>{row.status}</TableCell>
-                    </TableRow>
+              <TableRow key={row.pbi_id}> 
+                    <TableCell>{row.pbi_name}</TableCell>
+                    <TableCell>{row.pbi_description}</TableCell>
+                    <TableCell>{row.pbi_priority}</TableCell>
+                    <TableCell>{row.pbi_story_points}</TableCell>
+                    {row.pbi_sprint_id ? <TableCell>{row.pbi_sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
+                    <TableCell>{row.pbi_status}</TableCell>
+                </TableRow>
                 ))}
                 </TableBody>
             </Table>
@@ -279,3 +245,12 @@ const handleChange = (event, newValue) => {
       </div>
     );
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+  isManager: state.isManager,
+  id: state.id,
+}}
+
+export default connect(mapStateToProps)(ManagerView);

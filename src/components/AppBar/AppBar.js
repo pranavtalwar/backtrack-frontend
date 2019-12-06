@@ -6,7 +6,7 @@ import { AppBar, Button, Drawer, Divider,
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { menuItems } from './MenuItems';
+import MenuItems from './MenuItems';
 
  
 const drawerWidth = 240;
@@ -139,7 +139,7 @@ export default (props) => {
               </IconButton>
             </div>
             <Divider />
-            <List>{menuItems}</List>
+            <List> <MenuItems /> </List>
             <Divider />
           </Drawer>
         </div>
