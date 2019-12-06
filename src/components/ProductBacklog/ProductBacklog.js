@@ -47,14 +47,16 @@ const ProductBacklog = (props) => {
   const [priority, setPriority] = useState(0);
   const [pbiArray, setPbiArray] = useState([]);
   const [priorityList, setPriorityList]= useState([1]);
-  const {project_id} = props;
+  const { project_id } = props;
   const storyPointList = [10,20,30,40,50,60,70,80,90,100];
+  const url2 = "http://127.0.0.1:8000/pbis_in_project/?id=" + project_id;
   const url = "http://127.0.0.1:8000/pbi/";
 
   useEffect(() => {
     console.log(url);
-    fetch(url)
+    fetch(url2)
     .then(response => response.json())
+    .then(json => json.result)
     .then(json => {
       if(json.length === 0) {
         setPriorityList([1]);
@@ -74,7 +76,7 @@ const ProductBacklog = (props) => {
       return json;
     })
     .then(json => setPbiArray(json));
-  }, []);
+  }, [project_id, url2]);
 
   const validation = () => {
     if(name==='' || description === '' || storyPoint === 0 || priority === 0) {

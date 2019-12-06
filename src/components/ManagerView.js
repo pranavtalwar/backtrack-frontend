@@ -185,14 +185,14 @@ const ManagerView = (props) => {
             </TableHead>
             <TableBody>
             {pbis.map(row => ( 
-                (row.pbi_status==="Not Yet Started" || row.pbi_status==="ONGOING")?(
-                <TableRow key={row.pbi_id}> 
-                    <TableCell>{row.pbi_name}</TableCell>
-                    <TableCell>{row.pbi_description}</TableCell>
-                    <TableCell>{row.pbi_priority}</TableCell>
-                    <TableCell>{row.pbi_story_points}</TableCell>
-                    {row.pbi_sprint_id ? <TableCell>{row.pbi_sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
-                    <TableCell>{row.pbi_status}</TableCell>
+                (row.status==="Not Yet Started" || row.status==="ONGOING")?(
+                <TableRow key={row.id}> 
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.description}</TableCell>
+                    <TableCell>{row.priority}</TableCell>
+                    <TableCell>{row.story_points}</TableCell>
+                    {row.sprint_id ? <TableCell>{row.sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
+                    <TableCell>{row.status}</TableCell>
                     </TableRow>
             ):(
                 <>
@@ -216,15 +216,16 @@ const ManagerView = (props) => {
             </TableHead>
             <TableBody>
             {pbis.map(row => ( 
-              <TableRow key={row.pbi_id}> 
-                    <TableCell>{row.pbi_name}</TableCell>
-                    <TableCell>{row.pbi_description}</TableCell>
-                    <TableCell>{row.pbi_priority}</TableCell>
-                    <TableCell>{row.pbi_story_points}</TableCell>
-                    {row.pbi_sprint_id ? <TableCell>{row.pbi_sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
-                    <TableCell>{row.pbi_status}</TableCell>
+              <TableRow key={row.id}> 
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.description}</TableCell>
+                    <TableCell>{row.priority}</TableCell>
+                    <TableCell>{row.story_points}</TableCell>
+                    {row.sprint_id ? <TableCell>{row.sprint_id}</TableCell> : <TableCell>Not Assigned</TableCell>}
+                    <TableCell>{row.status}</TableCell>
                 </TableRow>
-                ))}
+                ))
+              }
                 </TableBody>
             </Table>
         </TabPanel>
