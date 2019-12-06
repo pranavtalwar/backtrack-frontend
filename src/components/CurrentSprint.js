@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
 
 
 const CurrentSprint = (props) => {
-  const { projectID } = props; 
+  const { id, projectID } = props; 
   const [pbiArray, setPbiArray] = useState([]);
   const [currPBI, setCurrPBI] = useState(null);
   const [checker, setChecker] = useState(false);
@@ -275,6 +275,26 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
   }
 }
 
+const handleTaskOwnership = (id, taskId)=> {
+  fetch(url3 + taskId + '/', {
+    method: 'PATCH',
+    body: JSON.stringify({
+      developer: id,
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(json => {
+    if(json.status_code === 200) {
+      fetch(url2)
+      .then(response => response.json())
+      .then(json => setCurrentSprint(json.result));
+    }
+  });
+}
+
   let tmpBurndown = 0;
   let tmpCompleted = 0;
   let pbiBurndown = 0;
@@ -411,14 +431,19 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
                                 <TableCell>{task.effort_hours}</TableCell>
                                 <TableCell>{task.status}</TableCell>
                                 <TableCell>
-                                  <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => handleTaskCompletion(task.id)}
-                                  >
-                                    Complete
-                                </Button> 
+                                { (id===task.developer || (task.status!== "Completed" && id===task.developer))?
+                                    <Button
+                                      type="submit"
+                                      variant="contained"
+                                      color="primary"
+                                      onClick={() => handleTaskCompletion(task.id)}
+                                      disabled = {id!==task.developer || task.status==="Completed"}
+                                    >
+                                      Complete
+                                  </Button> :
+                                  <>
+                                  </>
+                                  }
                               </TableCell>
                               <TableCell>
                                   <Button
@@ -449,12 +474,18 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
                                 </Button> 
                               </TableCell>
                               <TableCell>
-                                  <Button
+                                 { 
+                                   (task.developer===null)?
+                                   <Button
                                     type="submit"
                                     variant="contained"
-                                    color="primary">
+                                    color="primary"
+                                    onClick={()=> handleTaskOwnership(id, task.id)}>
                                     Ownership
-                                </Button> 
+                                  </Button> :
+                                  <>
+                                  </>
+                                }
                               </TableCell>
                             </TableRow>
                           )})}

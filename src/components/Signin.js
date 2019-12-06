@@ -57,7 +57,7 @@ const SignIn = (props)  => {
           isDeveloper: json.user_info.is_developer,
           isManager: json.user_info.is_manager,
           projectID: json.user_info.project_id,
-          id: json.user_info_id
+          id: json.user_info.id
         }});
         history.push('/homepage');
       } else {

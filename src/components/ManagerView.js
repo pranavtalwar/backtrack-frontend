@@ -114,7 +114,7 @@ const ManagerView = (props) => {
   const [currProj, setCurrProj] = useState('');
 
   useEffect(() => {
-    fetch(url + 'manager_projects/?id=1')
+    fetch(url + 'manager_projects/?id=' + id)
     .then(response => response.json())
     .then(json =>{
       const newJSON = json.result;
