@@ -237,6 +237,7 @@ const ProductBacklog = (props) => {
             value={name}
             label="Name"
             onChange={e => setName(e.target.value)}
+            disabled={!checker}
           />
           <br />
           <TextField 
@@ -244,6 +245,7 @@ const ProductBacklog = (props) => {
             multiline
             value={description}
             label="Description"
+            disabled={!checker}
             onChange={e => setDescription(e.target.value)}
           />
           <br />
@@ -252,6 +254,7 @@ const ProductBacklog = (props) => {
           <Select
             value={priority}
             onChange={e => setPriority(e.target.value)}
+            disabled={!checker}
           >
             {
               priorityList.map(priorityItem => (
@@ -265,6 +268,7 @@ const ProductBacklog = (props) => {
           <Select
             value={storyPoint}
             onChange={e => setStoryPoint(e.target.value)}
+            disabled={!checker}
           >
             {
               storyPointList.map(storyPoint => (
@@ -278,6 +282,7 @@ const ProductBacklog = (props) => {
             type="submit"
             variant="contained"
             color="primary"
+            disabled={!checker}
           >
             Create PBI
           </Button> 
