@@ -14,7 +14,7 @@ const PBITable = (props) => {
         priority: '',
         id: ''
     });
-    const { pbis, deletePBI, updatePBI, priorityList, storyPointList } = props;
+    const { pbis, deletePBI, updatePBI, priorityList, storyPointList, checker } = props;
 
     const handleClickOpen = () => {
         setDialogOpen(true);
@@ -55,7 +55,7 @@ const PBITable = (props) => {
                         variant="contained"
                         color="primary"
                         onClick={() => deletePBI(row.id)}
-                        disabled={row.sprint_id && row.status!=="Incomplete" && true}
+                        disabled={!checker || (row.sprint_id && row.status!=="Incomplete" && true)}
                     >
                         Delete
                     </Button> 
@@ -65,7 +65,7 @@ const PBITable = (props) => {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={row.sprint_id && row.status!=="Incomplete" && true}
+                        disabled={!checker || (row.sprint_id && row.status!=="Incomplete" && true)}
                         onClick={() => {
                             setUpdateObj(
                                 {

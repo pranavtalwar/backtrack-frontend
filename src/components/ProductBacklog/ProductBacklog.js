@@ -47,10 +47,12 @@ const ProductBacklog = (props) => {
   const [priority, setPriority] = useState(0);
   const [pbiArray, setPbiArray] = useState([]);
   const [priorityList, setPriorityList]= useState([1]);
-  const { project_id } = props;
+  const [checker, setChecker] = useState(false);
+  const { project_id, id } = props;
   const storyPointList = [10,20,30,40,50,60,70,80,90,100];
   const url2 = "http://127.0.0.1:8000/pbis_in_project/?id=" + project_id;
   const url = "http://127.0.0.1:8000/pbi/";
+  const url3 = "http://127.0.0.1:8000/project/" + project_id;
 
   useEffect(() => {
     console.log(url);
@@ -75,8 +77,18 @@ const ProductBacklog = (props) => {
       setPriorityList(newpriorityList);
       return json;
     })
-    .then(json => setPbiArray(json));
-  }, [project_id, url2]);
+    .then(json => setPbiArray(json))
+    .then(() => {
+      fetch(url3)
+      .then(response => response.json())
+      .then(json => {
+        if(parseInt(json.owner) === id) {
+          setChecker(true);
+          console.log('checker', checker)
+        }
+      })
+    })
+  }, [checker, id, project_id, url2, url3]);
 
   const validation = () => {
     if(name==='' || description === '' || storyPoint === 0 || priority === 0) {
@@ -280,6 +292,7 @@ const ProductBacklog = (props) => {
                     updatePBI={handleUpdate} 
                     priorityList={priorityList}
                     storyPointList={storyPointList}
+                    checker={checker}
                   />
                 </Paper>
               </Grid>
@@ -294,7 +307,8 @@ const ProductBacklog = (props) => {
 const mapStateToProps = (state) => {
   console.log(state);
   return {
-  project_id: state.projectID
+  project_id: state.projectID,
+  id: state.id
 }}
 
 export default connect(mapStateToProps)(ProductBacklog);
