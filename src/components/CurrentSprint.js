@@ -6,6 +6,7 @@ import { CssBaseline, Table, TableBody, TableRow, TableCell, Paper, Button,
 import { makeStyles } from '@material-ui/core/styles';
 import Copyright from './Copyright';
 import AppBar from './AppBar/AppBar';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,9 +59,11 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default () => {
+const CurrentSprint = (props) => {
+  const { projectID } = props; 
   const [pbiArray, setPbiArray] = useState([]);
   const [currPBI, setCurrPBI] = useState(null);
+  const [checker, setChecker] = useState(false);
   const [curTask, setCurTask] = useState({
     name: '',
     description: '',
@@ -92,21 +95,31 @@ export default () => {
 
   const classes = useStyles();
 
-  const url = "http://127.0.0.1:8000/pbi/";
-  const url2 = "http://127.0.0.1:8000/currentsprint/1";
+  const url = "http://127.0.0.1:8000/pbis_in_project/?id=" + projectID;
+  const url2 = "http://127.0.0.1:8000/currentsprint/" + projectID;
   const url3 = "http://127.0.0.1:8000/tasks/";
 
   useEffect(() => {
     // getting pbis for selection
     fetch(url)
     .then(response => response.json())
+    .then(json => json.result)
     .then(json => setPbiArray(json));
 
     // getting current sprint details
     fetch(url2)
     .then(response => response.json())
-    .then(json => setCurrentSprint(json.result));
-  }, []);
+
+    .then(json => {
+      if(json.status_code === 404) {
+        setChecker(true);
+      }
+      else {
+        setCurrentSprint(json.result);
+      }
+      
+    });
+  }, [url, url2]);
 
 const handleTaskCreate = e => {
   e.preventDefault();
@@ -274,8 +287,21 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar heading = 'Current Sprint'/>
-      <div className={classes.content}>
+      {
+        checker ? ( 
+        <div className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <div className={classes.appBarSpacer} />
+          <div className={classes.pbitext}>
+            <b>Please create a Sprint</b>
+          </div>
+        </div>
+        )
+        :
+        (
+          <div className={classes.content}>
         <div className={classes.appBarSpacer} />
+        
         <br/>
         <br/>
         <div className={classes.pbitext}>
@@ -303,7 +329,6 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
                 <MenuItem value={pbi}>{pbi.name}</MenuItem>
               ))
           }
-          {/* <MenuItem value={hello}>Make Soup</MenuItem> */}
           </Select>
           <br />
           <br />
@@ -482,7 +507,9 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
         <br/>
         <br/>
         <Copyright />   
-      </div> 
+      </div>
+        )
+      }
       <Dialog open={dialogOpen} onClose={handleClose} maxWidth={"md"} fullWidth={true} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Update PBI</DialogTitle>
             <DialogContent>
@@ -535,3 +562,14 @@ const handleTaskUpdate = (id, name, description, effort_hours) => {
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    id: state.id,
+    projectID: state.projectID
+  }
+}
+
+
+export default connect(mapStateToProps)(CurrentSprint);
