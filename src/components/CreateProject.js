@@ -156,7 +156,7 @@ const CreateProject = (props) => {
             name: null
           });
           dispatch({ type: "SETPROJECT", value: {
-            projectID: json.result.projectID
+            projectID: json.project_ID
           }});
           history.push('/homepage');
         }
