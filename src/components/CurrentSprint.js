@@ -114,13 +114,16 @@ const CurrentSprint = (props) => {
     .then(json => {
       if(json.status_code === 404) {
         setChecker(true);
+        console.log(checker);
+        console.log(json)
       }
       else {
+        console.log('chomu')
         setCurrentSprint(json.result);
       }
       
     });
-  }, [url, url2]);
+  }, [checker, url, url2]);
 
 const handleTaskCreate = e => {
   e.preventDefault();
@@ -314,7 +317,7 @@ const handleTaskOwnership = (id, taskId)=> {
           <div className={classes.appBarSpacer} />
           <div className={classes.appBarSpacer} />
           <div className={classes.pbitext}>
-            <b>Please create a Sprint</b>
+            <b>Please create a Sprint or your previous sprint must have ended</b>
           </div>
         </div>
         )

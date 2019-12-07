@@ -6,6 +6,7 @@ import {
   } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { makeStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import Copyright from './Copyright';
 import AppBar from './AppBar/AppBar';
 
@@ -46,11 +47,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default () => {
+const CreateSprint = (props) => {
   const classes = useStyles();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [capacity, setCapacity] = useState(null);
+  const { projectID } = props;
 
   const url2 = "http://127.0.0.1:8000/sprint/";
 
@@ -80,7 +82,7 @@ export default () => {
         start_date: startDate.toISOString().substring(0,10),
         end_date: endDate.toISOString().substring(0,10),
         capacity: capacity,
-        project: 1,
+        project: projectID,
       }),
       headers: {
         'Content-Type': 'application/json'
@@ -152,3 +154,12 @@ export default () => {
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    projectID: state.projectID
+  }
+}
+
+export default connect(mapStateToProps)(CreateSprint);

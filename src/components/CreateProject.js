@@ -108,6 +108,14 @@ const CreateProject = (props) => {
       alert('Please select some developers');
       return;
     }
+    else if (selectedDevelopers.length < 3) {
+      alert('Please select atleast three developers');
+      return;
+    }
+    else if (selectedDevelopers.length > 9) {
+      alert('Please select less than nine developers');
+      return;
+    }
     else if (currManager.id === null || currManager.name === null || currManager.user === null) {
       alert('Please select a manager');
       return;
