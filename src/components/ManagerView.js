@@ -127,7 +127,7 @@ const ManagerView = (props) => {
     .then(newJSON => {
       setProjArray(newJSON);
     })
-  }, []);
+  }, [id]);
   
   return (
     <div className={classes.root}>
@@ -248,7 +248,7 @@ const ManagerView = (props) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  console.log('state',state);
   return {
   isManager: state.isManager,
   id: state.id,

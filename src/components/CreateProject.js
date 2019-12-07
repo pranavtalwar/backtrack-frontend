@@ -108,14 +108,14 @@ const CreateProject = (props) => {
       alert('Please select some developers');
       return;
     }
-    else if (selectedDevelopers.length < 3) {
-      alert('Please select atleast three developers');
-      return;
-    }
-    else if (selectedDevelopers.length > 9) {
-      alert('Please select less than nine developers');
-      return;
-    }
+    // else if (selectedDevelopers.length < 3) {
+    //   alert('Please select atleast three developers');
+    //   return;
+    // }
+    // else if (selectedDevelopers.length > 9) {
+    //   alert('Please select less than nine developers');
+    //   return;
+    // }
     else if (currManager.id === null || currManager.name === null || currManager.user === null) {
       alert('Please select a manager');
       return;
@@ -138,7 +138,7 @@ const CreateProject = (props) => {
           manager: currManager.id,
           name: projName,
           developers: developersIDs,
-          owner: id
+          owner: id.toString()
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -146,10 +146,12 @@ const CreateProject = (props) => {
       })
       .then(response => response.json())
       .then(json => {
+        console.log(json)
         if(json.status_code === 406) {
           alert('Developer cant create a project since he/she is already part of a project');
         }
         else if(json.status_code === 201) {
+          console.log(json);
           alert('Project created');
           setProjName('');
           setCurrDeveloper({
@@ -163,8 +165,12 @@ const CreateProject = (props) => {
             user: null,
             name: null
           });
-          dispatch({ type: "SETPROJECT", value: {
-            projectID: json.project_id
+          const currentState = JSON.parse(localStorage.getItem('state'));
+          dispatch({ type: "SET", value: {
+            projectID: json.project_id,
+            isManager: currentState.isManager,
+            isDeveloper: currentState.isDeveloper,
+            id: currentState.id
           }});
           history.push('/homepage');
         }

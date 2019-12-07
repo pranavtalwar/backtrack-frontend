@@ -82,7 +82,10 @@ const ProductBacklog = (props) => {
       fetch(url3)
       .then(response => response.json())
       .then(json => {
+        console.log(json)
+        console.log(id)
         if(parseInt(json.owner) === id) {
+          console.log('hello')
           setChecker(true);
           console.log('checker', checker)
         }
@@ -310,10 +313,11 @@ const ProductBacklog = (props) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  console.log('state',state);
   return {
   project_id: state.projectID,
-  id: state.id
+  id: state.id,
+  isManager: state.isManager
 }}
 
 export default connect(mapStateToProps)(ProductBacklog);
