@@ -175,7 +175,7 @@ const CreateProject = (props) => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar heading = 'Create Sprint'/>
+      <AppBar heading = 'Create Project'/>
       <div className={classes.content}>
         <div className={classes.appBarSpacer} />
         <form
