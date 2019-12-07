@@ -105,7 +105,13 @@ const CurrentSprint = (props) => {
     fetch(url)
     .then(response => response.json())
     .then(json => json.result)
-    .then(json => setPbiArray(json));
+    .then(json => setPbiArray(json))
+    .then(() => {
+      const newArr = pbiArray.filter((pbi) => {
+        return pbi.status !== "COMPLETED";
+      });
+      setPbiArray(newArr);
+    });
 
     // getting current sprint details
     fetch(url2)
@@ -123,7 +129,7 @@ const CurrentSprint = (props) => {
       }
       
     });
-  }, [checker, url, url2]);
+  }, [checker, pbiArray, url, url2]);
 
 const handleTaskCreate = e => {
   e.preventDefault();
@@ -284,6 +290,7 @@ const handleTaskOwnership = (id, taskId)=> {
     method: 'PATCH',
     body: JSON.stringify({
       developer: id,
+      status: "ONGOING"
     }),
     headers: {
       'Content-Type': 'application/json'
