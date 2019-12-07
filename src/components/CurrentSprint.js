@@ -101,35 +101,21 @@ const CurrentSprint = (props) => {
   const url3 = "http://127.0.0.1:8000/tasks/";
 
   useEffect(() => {
-    // getting pbis for selection
     fetch(url)
     .then(response => response.json())
-    .then(json => json.result)
-    .then(json => setPbiArray(json))
-    .then(() => {
-      const newArr = pbiArray.filter((pbi) => {
-        return pbi.status !== "COMPLETED";
-      });
-      setPbiArray(newArr);
-    });
+    .then(json => setPbiArray(json.result));
 
-    // getting current sprint details
     fetch(url2)
     .then(response => response.json())
-
     .then(json => {
-      if(json.status_code === 404) {
+      if(json.status_code === 406) {
         setChecker(true);
-        console.log(checker);
-        console.log(json)
       }
       else {
-        console.log('chomu')
         setCurrentSprint(json.result);
       }
-      
     });
-  }, [checker, pbiArray, url, url2]);
+  }, [url, url2]);
 
 const handleTaskCreate = e => {
   e.preventDefault();
