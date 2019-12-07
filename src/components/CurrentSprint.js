@@ -96,6 +96,7 @@ const CurrentSprint = (props) => {
   const classes = useStyles();
 
   const url = "http://127.0.0.1:8000/pbis_in_project/?id=" + projectID;
+  const url4 = "http://127.0.0.1:8000/pbi/";
   const url2 = "http://127.0.0.1:8000/currentsprint/" + projectID;
   const url3 = "http://127.0.0.1:8000/tasks/";
 
@@ -198,7 +199,7 @@ const handleTaskDelete = id => {
 }
 
 const handlePBIRemoval = id => {
-  fetch(url + id + '/', {
+  fetch(url4 + id + '/', {
     method: 'PATCH',
     body: JSON.stringify({
       status: "Not Yet Started",
@@ -222,7 +223,7 @@ const handleTaskCompletion = id => {
   fetch(url3 + id + '/', {
     method: 'PATCH',
     body: JSON.stringify({
-      status: "Completed",
+      status: "COMPLETED",
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -419,7 +420,7 @@ const handleTaskOwnership = (id, taskId)=> {
                           {row.tasks.map(task => {
                             pbiBurndown = pbiBurndown + task.effort_hours;
                             tmpBurndown = tmpBurndown + task.effort_hours;
-                            if(task.status==="Completed"){
+                            if(task.status==="COMPLETED"){
                               tmpCompleted = tmpCompleted + task.effort_hours;
                               pbiCompleted = pbiCompleted + task.effort_hours;
                             }
@@ -431,13 +432,13 @@ const handleTaskOwnership = (id, taskId)=> {
                                 <TableCell>{task.effort_hours}</TableCell>
                                 <TableCell>{task.status}</TableCell>
                                 <TableCell>
-                                { (id===task.developer || (task.status!== "Completed" && id===task.developer))?
+                                { (id===task.developer || (task.status!== "COMPLETED" && id===task.developer))?
                                     <Button
                                       type="submit"
                                       variant="contained"
                                       color="primary"
                                       onClick={() => handleTaskCompletion(task.id)}
-                                      disabled = {id!==task.developer || task.status==="Completed"}
+                                      disabled = {id!==task.developer || task.status==="COMPLETED"}
                                     >
                                       Complete
                                   </Button> :
@@ -450,6 +451,7 @@ const handleTaskOwnership = (id, taskId)=> {
                                     type="submit"
                                     variant="contained"
                                     color="primary"
+                                    disabled={task.status==="COMPLETED" || (task.developer !== null && task.developer !== id)}
                                     onClick={() => {
                                       setUpdateObj({
                                         name: task.name,
@@ -468,6 +470,7 @@ const handleTaskOwnership = (id, taskId)=> {
                                     type="submit"
                                     variant="contained"
                                     color="primary"
+                                    disabled={task.status==="COMPLETED" || (task.developer !== null && task.developer !== id)}
                                     onClick={() => handleTaskDelete(task.id)}
                                   >
                                   Delete
@@ -484,6 +487,8 @@ const handleTaskOwnership = (id, taskId)=> {
                                     Ownership
                                   </Button> :
                                   <>
+                                    {id===task.developer ? <p>You are working on this</p> : <p>Another developer is working on this</p>}
+                                    
                                   </>
                                 }
                               </TableCell>
